@@ -31,7 +31,7 @@ namespace KIT206_RAP
             }
         }
 
-        public Staff(string firstName, string lastName, string email) : base(firstName, lastName, email)
+        public Staff(string firstName, string lastName, string email) : base(firstName, lastName, title, schoolUnit, email, currentJobTitle, commencement, commenceCurrentPosition, publications, q1Percentagefirst)
         {
             Positions = new List<string>();
             Supervisions = new List<Student>();

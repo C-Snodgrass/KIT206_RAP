@@ -18,7 +18,7 @@ namespace KIT206_RAP
         public DateTime Commencement { get; set; }
         public DateTime CommenceCurrentPosition { get; set; }
         public List<Publication> Publications { get; set; }
-        //public int Q1Percentage { get; set; }
+        public double Q1Percentage { get; set; }
 
         // Constructor
         public Researcher(string firstName, string lastName, string title, string schoolUnit, string email, string currentJobTitle, DateTime commencement, DateTime commenceCurrentPosition, List<Publication> publications, int q1Percentage)
@@ -32,11 +32,11 @@ namespace KIT206_RAP
             Commencement = commencement;
             CommenceCurrentPosition = commenceCurrentPosition;
             Publications = publications;
-            //_Q1Percentage = Q1Percentage();
+            Q1Percentage = Q1PercentageCalc();
         }
 
         //methods here
-        public double Q1Percentage()
+        public double Q1PercentageCalc()
         {
             int q1Count = 0;
             int totalPublications = Publications.Count;
@@ -52,8 +52,6 @@ namespace KIT206_RAP
             double percentage = (double)q1Count / totalPublications * 100;
             return percentage;
         }
-
-
     }
 
     public enum Campus
