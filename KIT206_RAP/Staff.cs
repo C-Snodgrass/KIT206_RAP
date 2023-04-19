@@ -30,9 +30,9 @@ namespace KIT206_RAP
                 return count > 0 ? (int)Math.Round((double)sum / count, MidpointRounding.AwayFromZero) : 0;
             }
         }
-
-        public Staff(string firstName, string lastName, string email) : base(firstName, lastName, title, schoolUnit, email, currentJobTitle, commencement, commenceCurrentPosition, publications, q1Percentagefirst)
+        public Staff(List<string> positions,List<Student> Supervisions, string firstName, string lastName, string title, string schoolUnit, string email, string currentJobTitle, DateTime commencement, DateTime commenceCurrentPosition, List<Publication> publications, int q1Percentage) : base(firstName, lastName, title, schoolUnit, email, currentJobTitle, commencement, commenceCurrentPosition, publications, q1Percentage)
         {
+            // i think this is wrong as we are passing in a list of studenst and positions but then making a new list here??
             Positions = new List<string>();
             Supervisions = new List<Student>();
         }

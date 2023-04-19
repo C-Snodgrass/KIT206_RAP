@@ -33,6 +33,7 @@ namespace KIT206_RAP
             PageCount = pageCount;
             Type = type;
             Ranking = ranking;
+
         }
 
         // Method to count cumulative publications
