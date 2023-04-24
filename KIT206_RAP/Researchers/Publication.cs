@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KIT206_RAP
+namespace KIT206_RAP.Researchers
 {
     internal class Publication
     {

@@ -43,18 +43,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
-    <Compile Include="Level.cs" />
-    <Compile Include="Position.cs" />
+    <Compile Include="Researchers\Position.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Publication.cs" />
-    <Compile Include="Researcher.cs" />
-    <Compile Include="Staff.cs" />
-    <Compile Include="Student.cs" />
+    <Compile Include="Researchers\Publication.cs" />
+    <Compile Include="Researchers\Researcher.cs" />
+    <Compile Include="Researchers\Staff.cs" />
+    <Compile Include="Researchers\Student.cs" />
+    <Compile Include="View\PerformaceDetailsView.cs" />
+    <Compile Include="View\PublicationView.cs" />
+    <Compile Include="View\ResearcherDetailsView.cs" />
+    <Compile Include="View\ResearcherView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Controll\" />
+    <Folder Include="DataBase\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
