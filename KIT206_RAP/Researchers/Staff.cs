@@ -9,28 +9,29 @@ namespace KIT206_RAP.Researchers
 {
     internal class Staff : Researcher
     {
-        public List<Position> Positions { get; set; }
-        public List<Student> Supervisions { get; set; }
+        //public List<Position> Positions { get; set; }
+        public List<String> Positions {  get; set; }
+        //public List<Student> Supervisions { get; set; }
+        public List<String> Supervisions { get; set; }
         public double FundingRecieved { get; set; }
         public double PerformanceByFunding { get; set; }
         public int ThreeYearAverage { get; set; }
             
        // Constructor
-        public Staff(string firstName, string lastName, Campus campus, string schoolUnit, string email, List<Publication> publications, int FundingRecieved,  
-            List<Position> positions, List<Student> supervisions)
-            : base(firstName, lastName, campus, schoolUnit, email, publications)
+        public Staff(string firstName, string lastName, string title,bool isStudent, Campus campus, string schoolUnit, string email, int FundingRecieved,  
+            List<String> positions, List<String> supervisions, Level level)
+            : base(firstName, lastName, title, isStudent, campus, schoolUnit, email, level)
         {
-            List<Position> Positions = positions;
-            List<Student> Supervisions = supervisions;
+            List<String> Positions = positions;
+            List<String> Supervisions = supervisions;
             // i think this is wrong as we are passing in a list of studenst and positions but then making a new list here??
             // will have to ping the database with something like get all students with "researcher name" as supervisor
-            Supervisions = new List<Student>();
-            ThreeYearAverage = AverageThreeYear();
-       //     double funding = 100;
+            //ThreeYearAverage = AverageThreeYear();
+            //double funding = 100;
 
         }
         
-        
+       /* 
         public int AverageThreeYear()
         {
             //3-year Average is the total number of publications in the previous three whole calendar years, divided by three.
@@ -48,7 +49,7 @@ namespace KIT206_RAP.Researchers
 
             return count > 0 ? (int)Math.Round((double)sum / count, MidpointRounding.AwayFromZero) : 0;
         }
-
+*/
         // calculate performance by funding
         public double PerforByFund(double fundingRecieved)
         {

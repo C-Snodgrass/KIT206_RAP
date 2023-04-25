@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 namespace KIT206_RAP.Researchers
@@ -15,37 +16,41 @@ namespace KIT206_RAP.Researchers
 
     internal class Researcher
     {
-        // Properties
+        // Properties some of these are not necisary
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Title { get; set; }
+        public bool IsStudent { get; set; }
         public string SchoolUnit { get; set; }
         public string Email { get; set; }
         public string CurrentJobTitle { get; set; }
         public DateTime CommenceCurrentPosition { get; set; }
         public DateTime CommencedWithInstitution { get; set; }
-        public List<Publication> Publications { get; set; }
         public double Q1Percentage { get; set; }
         public string JobTitle { get; set; }
         public double ExpectedNoPublications { get; set; }
         public Campus Campus { get; set; }
         public string photoPlaceHolder { get; set; }
         public double Tenure { get; set; } // time in fractional years since the researcher commecned with the institution
+        public Level positionLevle { get; set; }
 
         // Constructor
-        public Researcher(string firstName, string lastName, Campus campus, string schoolUnit, string email, List<Publication> publications)
+        public Researcher(string firstName, string lastName, String title, bool isStudent, Campus campus, string schoolUnit, string email, Level level)
         {
             FirstName = firstName;
             LastName = lastName;
             SchoolUnit = schoolUnit;
+            IsStudent = isStudent;
             Email = email;
+            positionLevle = level;
             //CurrentJobTitle = DeriveJobTitle();
-            Publications = publications;
-            Q1Percentage = Q1PercentageCalc();
+            //Q1Percentage = Q1PercentageCalc();
             CommenceCurrentPosition = CommCurretnPos();
             CommencedWithInstitution = CommWithInstitution();
             photoPlaceHolder = FetchPhoto();
             Tenure = CalcTenure(CommencedWithInstitution);
+            JobTitle = DeriveJobTitle(level);
+            Title = title;
 
         }
 
@@ -139,7 +144,8 @@ namespace KIT206_RAP.Researchers
 
             return placeHolder;
         }
-        //methods here
+
+        /*
         public double Q1PercentageCalc()
         {
             int q1Count = 0;
@@ -156,6 +162,7 @@ namespace KIT206_RAP.Researchers
             double percentage = (double)q1Count / totalPublications * 100;
             return percentage;
         }
+        */
 
     }
 }

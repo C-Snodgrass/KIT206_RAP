@@ -9,11 +9,13 @@ namespace KIT206_RAP.Researchers
 {
     internal class Student : Researcher
     {
-        public Staff Supervisor { get; set; }
+        // public Staff Supervisor { get; set; }
+        public string Supervisor { get; set; }
         public string Degree { get; set; }
-
-        public Student(string firstName, string lastName, Campus campus, string schoolUnit, string email, List<Publication> publications, Staff supervisor, string degree)
-                : base(firstName, lastName, campus, schoolUnit, email, publications)
+        
+        
+        public Student(string firstName, string lastName, string title, bool isStudent, Campus campus, string schoolUnit, string email, string supervisor, string degree, Level level)
+                : base(firstName, lastName, title, isStudent, campus, schoolUnit, email, level)
         {
             Supervisor = supervisor;
             Degree = degree;

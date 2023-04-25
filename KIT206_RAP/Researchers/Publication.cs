@@ -13,7 +13,9 @@ namespace KIT206_RAP.Researchers
         public DateTime PublicationYear { get; set; }
         public string Title { get; set; }
         public string DOI { get; set; }
-        public List<Researcher> Authors { get; set; }
+        // is authors an actual list of researcher objects? or just a list of strings?
+        //public List<Researcher> Authors { get; set; }
+        public List<string> Authors { get; set; }
         public string CiteAs { get; set; }
         public DateTime AvailabilityDate { get; set; }
         public int PageCount { get; set; }
@@ -21,7 +23,7 @@ namespace KIT206_RAP.Researchers
         public RankingType Ranking { get; set; }
 
         // Constructor
-        public Publication(bool q1Ranked, DateTime publicationYear, string title, string doi, List<Researcher> authors, string citeAs, DateTime availabilityDate, int pageCount, PublicationType type, RankingType ranking)
+        public Publication(bool q1Ranked, DateTime publicationYear, string title, string doi, List<string> authors, string citeAs, DateTime availabilityDate, int pageCount, PublicationType type, RankingType ranking)
         {
             Q1Ranked = q1Ranked;
             PublicationYear = publicationYear;
@@ -37,10 +39,10 @@ namespace KIT206_RAP.Researchers
         }
 
         // Method to count cumulative publications
-        public int cumulativePubs()
-        {
-            return Authors.Sum(author => author.Publications.Count);
-        }
+        //public int cumulativePubs()
+        //{
+        //    return Authors.Sum(author => author.Publications.Count);
+        //}
     }
 
     public enum PublicationType
