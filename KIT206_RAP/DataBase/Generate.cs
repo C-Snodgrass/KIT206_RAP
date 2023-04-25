@@ -15,6 +15,7 @@ namespace KIT206_RAP.DataBase
 
         public static List<Researcher> GenerateReserchers()
         {
+
             return new List<Researcher>() {
                 new Researcher("Paul", "McCartney", "DR", false, Campus.Hobart, "Computers", "email@email", Level.A),
                 new Researcher("Chris", "Snodgrass", "DR", true, Campus.Hobart, "Computers", "email@email.com", Level.D),
@@ -63,14 +64,14 @@ namespace KIT206_RAP.DataBase
         }
         */
 
-        public static List<Publication> GeneratePublications()
+        public static List<Publication> GeneratePublications(String name)
         {
             return new List<Publication>()
             {
-                new Publication(false, new DateTime(1988, 3, 28), "Abbey Road", "doi:10.1234/abcd",new List<string>{"Jimm","Jande"},  "Dow,J. Smith, J. (2022). theresearch", new DateTime(2022, 1, 1), 190, PublicationType.Journal, RankingType.Q2),
-                new Publication(false, new DateTime(1988, 3, 28), "Revolver", "doi:10.1234/abcd", new List<string>{"Jimm","Jande"}, "Dow,J. Smith, J. (2022). theresearch", new DateTime(2022, 1, 1), 190, PublicationType.Journal, RankingType.Q2),
-                new Publication(false, new DateTime(1988, 3, 28), "Sg. Pepper", "doi:10.1234/abcd",  new List<string>{"Jimm","Jande"}, "Dow,J. Smith, J. (2022). theresearch", new DateTime(2022, 1, 1), 190, PublicationType.Journal, RankingType.Q2),
-                new Publication(false, new DateTime(1988, 3, 28), "A Hard Day's Night", "doi:10.1234/abcd", new List<string>{"Jimm","Jande"}, "Dow,J. Smith, J. (2022). theresearch", new DateTime(2022, 1, 1), 190, PublicationType.Journal, RankingType.Q2)
+                new Publication(false, new DateTime(1988, 3, 28), "Abbey Road", "doi:10.1234/abcd",new List<string>{"Jimm","Jande"},  name, new DateTime(2022, 1, 1), 190, PublicationType.Journal, RankingType.Q2),
+                new Publication(false, new DateTime(1988, 3, 28), "Revolver", "doi:10.1234/abcd", new List<string>{"Jimm","Jande"}, name, new DateTime(2022, 1, 1), 190, PublicationType.Journal, RankingType.Q2),
+                new Publication(false, new DateTime(1988, 3, 28), "Sg. Pepper", "doi:10.1234/abcd",  new List<string>{"Jimm","Jande"}, name, new DateTime(2022, 1, 1), 190, PublicationType.Journal, RankingType.Q2),
+                new Publication(false, new DateTime(1988, 3, 28), "A Hard Day's Night", "doi:10.1234/abcd", new List<string>{"Jimm","Jande"}, name, new DateTime(2022, 1, 1), 190, PublicationType.Journal, RankingType.Q2)
             
             };
         }
@@ -79,11 +80,10 @@ namespace KIT206_RAP.DataBase
         {
             return new List<Position>()
             {
-                new Position {StartDate = new DateTime(1,1,1), Level = Level.A, EndDate = new DateTime(2,2,2)},
-                new Position {StartDate = new DateTime(1,1,1), Level = Level.A, EndDate = new DateTime(2,2,2)},
-                new Position {StartDate = new DateTime(1,1,1), Level = Level.A, EndDate = new DateTime(2,2,2)},
-                new Position {StartDate = new DateTime(1,1,1), Level = Level.A, EndDate = new DateTime(2,2,2)},
-
+                new Position {StartDate = new DateTime(1986,1,1), Level = Level.A, EndDate = new DateTime(1987,2,2)},
+                new Position {StartDate = new DateTime(1988,1,1), Level = Level.A, EndDate = new DateTime(1999,2,2)},
+                new Position {StartDate = new DateTime(2001,1,1), Level = Level.A, EndDate = new DateTime(2002,2,2)},
+                new Position {StartDate = new DateTime(2020,1,1), Level = Level.A, EndDate = new DateTime()},
             };
         }
 

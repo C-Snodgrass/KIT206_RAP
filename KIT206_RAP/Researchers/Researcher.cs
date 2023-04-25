@@ -24,14 +24,14 @@ namespace KIT206_RAP.Researchers
         public string SchoolUnit { get; set; }
         public string Email { get; set; }
         public string CurrentJobTitle { get; set; }
-        public DateTime CommenceCurrentPosition { get; set; }
-        public DateTime CommencedWithInstitution { get; set; }
-        public double Q1Percentage { get; set; }
+        public DateTime CommenceCurrentPosition { get; private set; }
+        public DateTime CommencedWithInstitution { get; private set; }
+        public double Q1Percentage { get; private set; }
         public string JobTitle { get; set; }
         public double ExpectedNoPublications { get; set; }
         public Campus Campus { get; set; }
         public string photoPlaceHolder { get; set; }
-        public double Tenure { get; set; } // time in fractional years since the researcher commecned with the institution
+        public double Tenure { get; private set; } // time in fractional years since the researcher commecned with the institution
         public Level positionLevle { get; set; }
 
         // Constructor
@@ -43,97 +43,114 @@ namespace KIT206_RAP.Researchers
             IsStudent = isStudent;
             Email = email;
             positionLevle = level;
-            //CurrentJobTitle = DeriveJobTitle();
-            //Q1Percentage = Q1PercentageCalc();
-            CommenceCurrentPosition = CommCurretnPos();
-            CommencedWithInstitution = CommWithInstitution();
             photoPlaceHolder = FetchPhoto();
-            Tenure = CalcTenure(CommencedWithInstitution);
-            JobTitle = DeriveJobTitle(level);
             Title = title;
-
+            DeriveJobTitle(level);
         }
-
-
         
-        public string DeriveJobTitle(Level level)
+        public void DeriveJobTitle(Level level)
         {
-            string JobTitle;
 
             switch (level)
             {
                 case Level.A:
                     JobTitle = "Research Associate";
-                    //ExpectedNoPublications = 0.5; 
+                    ExpectedNoPublications = 0.5; 
                     break; 
                 case Level.B:
                     JobTitle = "Lecturer";
-                    //ExpectedNoPublications = 1;
+                    ExpectedNoPublications = 1;
                     break;
 
                 case Level.C:
                     JobTitle = "Assistant Professor";
-                    //ExpectedNoPublications = 2;
+                    ExpectedNoPublications = 2;
                     break;
 
                 case Level.D:
                     JobTitle = "Associate Professor";
-                    //ExpectedNoPublications = 3.2;
+                    ExpectedNoPublications = 3.2;
                     break;
 
                 case Level.E:
                     JobTitle = "Professor";
-                    //ExpectedNoPublications = 4;
+                    ExpectedNoPublications = 4;
                     break;
 
                 default:
                     throw new ArgumentException("Invalid level character");
             }
-
-                return JobTitle;
             
         }
         
-        public double CalcTenure(DateTime CommCurPos)
-        {
-            TimeSpan difference = DateTime.Now - CommCurPos;
-            double years = difference.TotalDays / 365.25;
+        // these do not happen in the constructor
+        // if the db returns a list of positions with the researcher i say we itterate / loop through them
+        // looking for what we need, if not we are calling the DB interface with a different query for each 
+        // piece of data we need
 
+        // overload constructor to deal with the position data
+        // not sure how this will be defined, do they have poitions from other institutions in this list?
+        // if so will have to check that the name matches the institution we are developing for presumably UTAS
+        public static void CalcPositionInfo(Researcher researcher, List<Position> positions)
+        {
+            Console.WriteLine("\t\t\t\tthello in the funciton");
+            foreach (Position positiona in positions)
+            {
+                Console.WriteLine(positiona.StartDate);
+            }
+            CalcEarliestPos(researcher, positions);
+            CalcTenure(researcher, researcher.CommencedWithInstitution);
+            CalcComencedCurrentPos(researcher, positions);
+
+        }
+        public static void CalcEarliestPos(Researcher researcher, List<Position> positions)
+        {
+            //Commenced with institution is the start date of their earliest position.
+            // search the positions table for earliest start dat (min)
+            // SELECT MIN(start_date) as earliest_start_date
+            // FROM positions;
+            // find lowest dat in the list
+
+            // find lowest dat in the list
+            DateTime lowest = DateTime.Today;
+            foreach (Position position in positions)
+            {
+                if (position.StartDate < lowest)
+                {
+                    lowest = position.StartDate;
+                }
+            }
+            researcher.CommencedWithInstitution = lowest;
+        }
+        public static void CalcTenure(Researcher researcher,DateTime CommCurPos)
+        {
             //Tenure is the time in (fractional) years since the researcher commenced with the institution.
             // CommWithInstitution - current timeDate;
 
-            return years;
+            TimeSpan difference = DateTime.Now - CommCurPos;
+            double years = difference.TotalDays / 365.25;
 
+            researcher.Tenure = years;
         }
 
         // want  this to return a Position void is placeholder
-        public void CalcCurrentPos()
+        public static void CalcComencedCurrentPos(Researcher researcher, List<Position> positions)
         {
-            // does the database return an array of all positions held by the individual???
-            // find lowest and return
-            //Position position; 
-            //return position;
-        }
-
-        public DateTime CommCurretnPos()
-        {
-            //Commenced current position is the start date of their current position.
-            // hit database for most current position start date
-            // Position currentPosition = CalcCurrentPos();
-            // return currentPosition.StartDate;
-            DateTime currentPosDate = new DateTime(1, 1, 1);
-
-            return currentPosDate;
-        }
-
-        public DateTime CommWithInstitution()
-        {
-            //Commenced with institution is the start date of their earliest position.
-
-            DateTime withInstitution = new DateTime(1, 1, 1);
-
-            return withInstitution;
-
+            // search the positions table for latest start dat (max)
+            // SELECT MAX(start_date) as earliest_start_date
+            // FROM positions;
+            // or
+            // or are we looking for a position with a NULL end date, i.e. no end date???
+            // find highest date in the list, this will be the current position
+            DateTime highest = new DateTime(1, 1, 1);
+            foreach( Position position in positions)
+            {
+                if (position.StartDate > highest)
+                {
+                    highest= position.StartDate;
+                }
+            }
+            researcher.CommenceCurrentPosition = highest;
         }
 
         public String FetchPhoto()
@@ -141,17 +158,15 @@ namespace KIT206_RAP.Researchers
             // fetch photo url
             String placeHolder = "placeHolder";
 
-
             return placeHolder;
         }
-
-        /*
-        public double Q1PercentageCalc()
+        
+        public static void Q1PercentageCalc(Researcher researcher, List<Publication> publications)
         {
             int q1Count = 0;
-            int totalPublications = Publications.Count;
+            int totalPublications = publications.Count;
 
-            foreach (Publication publication in Publications)
+            foreach (Publication publication in publications)
             {
                 if (publication.Ranking == RankingType.Q1)
                 {
@@ -160,10 +175,9 @@ namespace KIT206_RAP.Researchers
             }
 
             double percentage = (double)q1Count / totalPublications * 100;
-            return percentage;
+            // sets the top global var...
+            researcher.Q1Percentage = percentage;
         }
-        */
-
     }
 }
 

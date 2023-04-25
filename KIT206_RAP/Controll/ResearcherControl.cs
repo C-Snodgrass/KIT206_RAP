@@ -26,6 +26,13 @@ namespace KIT206_RAP.Controll
 
         public static void DisplayResearcherDetails(Researcher researcher)
         {
+                        // fetch researcher publications, and then positions
+            // SELECT*
+            // FROM Publications
+            // WHERE AuthorName = 'provided_author_name';
+
+            Console.WriteLine("Q1 percentage for" + researcher.FirstName + " is " );
+            
             // can this if else be handled with researcher.Level == D... i.e. do all students have Level D and no staff have level D?
             // if so can remove the IsStudent field which would be good
             if (researcher.IsStudent ==  false)
