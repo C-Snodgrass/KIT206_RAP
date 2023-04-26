@@ -4,8 +4,8 @@ using System.Linq;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
-using KIT206_RAP.DataBase;
 // uncomment when somehting added
+using KIT206_RAP.DataBase;
 using KIT206_RAP.Controll;
 using KIT206_RAP.Researchers;
 using KIT206_RAP.View;
@@ -15,8 +15,10 @@ namespace KIT206_RAP
 {
     internal class Program
     {
+
         static void Main(string[] args)
         {
+            DBAdapter.TestData();
             // fetch all staff
             // SELECT * FROM students;
             // SELECT name, age FROM students;

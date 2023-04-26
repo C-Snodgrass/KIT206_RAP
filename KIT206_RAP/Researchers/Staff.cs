@@ -4,7 +4,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+/*
+3-year Average is the total number of publications in the previous three whole calendar years, divided by three. SWC 27
+Performance by Publication is the average number of publications per year since commencement. SWC 27
+Performance by Funding Received is the average amount of funding per year since commencement. SWC 27
+Supervisions is the number of students the staff member is currently or has previously supervised. 
+*/
 namespace KIT206_RAP.Researchers
 {
     internal class Staff : Researcher
@@ -16,6 +21,7 @@ namespace KIT206_RAP.Researchers
         public double FundingRecieved { get; set; }
         public double PerformanceByFunding { get; set; }
         public int ThreeYearAverage { get; set; }
+        public int PerformanceByPublication { get; set; }
             
        // Constructor
         public Staff(string firstName, string lastName, string title,bool isStudent, Campus campus, string schoolUnit, string email, int FundingRecieved,  
@@ -59,8 +65,24 @@ namespace KIT206_RAP.Researchers
             return performaceFunding;
 
         }
+
+        //3-year average
+        //performance by publication
+        //performance by fundgin
        
-        
+        public static void supervisions()
+        {
+            // this will probably have to be it's own SQL / LINQ query as we have
+            // question each student table for it's supervisor
+            // not sure how supervisor is recorded in the DB, maybe they have ID's???
+            // FROM students
+            // GET *
+            // WHERE supervisor = Researcher.lastName
+
+
+        }
+        //supervisions
+
 
         // calculate performance
         // calculate perfomeance by publication

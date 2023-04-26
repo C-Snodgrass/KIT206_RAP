@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace KIT206_RAP.Researchers
-
 {
     public enum Level
     { 

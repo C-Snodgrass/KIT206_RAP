@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using KIT206_RAP.Researchers;
+using KIT206_RAP.Controll;
 
 namespace KIT206_RAP.View
 {
@@ -31,16 +32,17 @@ namespace KIT206_RAP.View
         value (rounded to the floor in case of a decimal); performance by funding, which is expressed as an average per year with one
         decimal place shown. 
          */
-        public void PrintMainView(List<Researcher> researcher_list)
+        public static void PrintPerformanceView(Researcher researcher)
         {
+            List<Publication> publications = ResearcherControl.GetPublications(researcher);
+            Researcher.Q1PercentageCalc(researcher, publications);
 
-            Console.WriteLine("---\t---\tThis is the MinaView\t---\t---");
-            foreach (Researcher researcher in researcher_list)
-            {
-                // could send this to an overloaded print fuction in the researcher class if we wanted.
-                Console.WriteLine("Name: " + researcher.FirstName);
+               
 
-            }
+            Console.WriteLine("\t#####\t#####\t WELCOME TO PERFORMANCE WIEW \t########\t#######");
+            Console.WriteLine("Performance for :" + researcher.LastName);
+            Console.WriteLine("Q1 performance is ..." + researcher.Q1Percentage + "%");
+
         }
     }
 }

@@ -19,7 +19,8 @@ namespace KIT206_RAP.Controll
             //List<Student> studentList= Agency.GenerateStudents();
             //ResearcherView.PrintAllResearchers(studentList, StaffList);
 
-            List<Researcher> ResearcherList = Agency.GenerateReserchers();
+            List<Researcher> ResearcherList = DBAdapter.GenerateReserchers();
+
 
             ResearcherView.PrintAllResearchers(ResearcherList);
         }
@@ -39,7 +40,7 @@ namespace KIT206_RAP.Controll
             {
                 // get researcher details for staff DB
                 Console.WriteLine("is a staff");
-                Staff staffMember = Agency.GenerateStaffMember(researcher);
+                Staff staffMember = DBAdapter.GenerateStaffMember(researcher);
                 ResearcherDetailsView.DisplayResearcherDetailsViewStaff(staffMember);
 
             }
@@ -47,12 +48,26 @@ namespace KIT206_RAP.Controll
             {
                 Console.WriteLine("is a student");
                 // get researcher details for student DB
-                Student student = Agency.GenerateStudentMember(researcher);
+                Student student = DBAdapter.GenerateStudentMember(researcher);
                 ResearcherDetailsView.DisplayResearcherDetailsViewStudent(student);
             }
 
         }
-        
+
+        public static void DisplayPerformanceDetails(Researcher researcehr)
+        {
+            PerformaceDetailsView.PrintPerformanceView(researcehr);
+        }
+
+        public static List<Publication> GetPublications(Researcher researcher)
+        {
+            Console.WriteLine("getting the pubs");
+            Console.WriteLine("getting the pubs");
+            Console.WriteLine("getting the pubs");
+            Console.WriteLine("getting the pubs");
+            return DBAdapter.GeneratePublications(researcher.LastName);
+        }
+
 
 
     }

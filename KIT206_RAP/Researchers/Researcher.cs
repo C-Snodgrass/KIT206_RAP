@@ -177,6 +177,9 @@ namespace KIT206_RAP.Researchers
             double percentage = (double)q1Count / totalPublications * 100;
             // sets the top global var...
             researcher.Q1Percentage = percentage;
+            Console.WriteLine(researcher.Q1Percentage);
+            Console.WriteLine(researcher.Q1Percentage);
+            Console.WriteLine(researcher.Q1Percentage);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using KIT206_RAP.DataBase;
+﻿using KIT206_RAP.Controll;
+using KIT206_RAP.DataBase;
 using KIT206_RAP.Researchers;
 using System;
 using System.Collections.Generic;
@@ -37,12 +38,14 @@ namespace KIT206_RAP.View
      */
     internal class ResearcherDetailsView
     {
+        // these two metods need to be colapsed into one, sorry i have spent too much time wiriting C lately
+        // and forgot that these can take the same think....
         public static void DisplayResearcherDetailsViewStudent(Student student)
         {
             
             // fetch publications form DB??
-            List <Publication> publications = Agency.GeneratePublications(student.LastName);
-            List<Position> posisions = Agency.GeneratePositions();
+            List <Publication> publications = DBAdapter.GeneratePublications(student.LastName);
+            List<Position> posisions = DBAdapter.GeneratePositions();
             Researcher.CalcPositionInfo(student, posisions);
             Researcher.Q1PercentageCalc(student, publications);
 
@@ -60,26 +63,18 @@ namespace KIT206_RAP.View
             Console.WriteLine("Commenced with Institution: " + student.CommencedWithInstitution);
             Console.WriteLine("Commecnce curr Pos: " + student.CommenceCurrentPosition);
             Console.WriteLine("Tenure: " + student.Tenure);
-                       
-            foreach (Publication publciacion in publications)
-            {
-                Console.WriteLine("Publications: " + publciacion.Title);
-            }
-
             Console.WriteLine("Degree: " + student.Degree);
             Console.WriteLine("Tenure: " + student.Supervisor);
 
-
+            ResearcherControl.DisplayPerformanceDetails(student);
         }
 
         public static void DisplayResearcherDetailsViewStaff(Staff staff)
         {
             // fetch publications form DB?? 
             //Console.WriteLine("Publications: " + staff.Publications);
-            List <Publication> publications = Agency.GeneratePublications(staff.LastName);
-            List<Position> posisions = Agency.GeneratePositions();
+            List<Position> posisions = DBAdapter.GeneratePositions();
             Researcher.CalcPositionInfo(staff, posisions);
-            Researcher.Q1PercentageCalc(staff, publications);
             // this would call the DB and do something like...
             // someting like this to get th 
             // SELECT *
@@ -103,13 +98,10 @@ namespace KIT206_RAP.View
             Console.WriteLine("Commecnce curr Pos: " + staff.CommenceCurrentPosition);
             Console.WriteLine("Tenure: " + staff.Tenure);
             
-            foreach (Publication publciacion in publications)
-            {
-                Console.WriteLine("Publications: " + publciacion.Title);
-            }
-            
-            Console.WriteLine("Supervisions: ");
+            ResearcherControl.DisplayPerformanceDetails(staff);
 
         }
+
+
     }
 }
