@@ -14,22 +14,15 @@ namespace KIT206_RAP.Researchers
 {
     internal class Staff : Researcher
     {
-        //public List<Position> Positions { get; set; }
-        public List<String> Positions {  get; set; }
-        //public List<Student> Supervisions { get; set; }
-        public List<String> Supervisions { get; set; }
         public double FundingRecieved { get; set; }
         public double PerformanceByFunding { get; set; }
         public int ThreeYearAverage { get; set; }
         public int PerformanceByPublication { get; set; }
             
        // Constructor
-        public Staff(string firstName, string lastName, string title,bool isStudent, Campus campus, string schoolUnit, string email, int FundingRecieved,  
-            List<String> positions, List<String> supervisions, Level level)
-            : base(firstName, lastName, title, isStudent, campus, schoolUnit, email, level)
+        public Staff(int id, string type, string firstName, string lastName, string title, string schoolUnit, string campHouse, string email, string photURL, string lev, DateTime utas_start, DateTime curretn_start)
+            : base( id, type, firstName, lastName, title, schoolUnit, campHouse, email, photURL, utas_start, curretn_start)
         {
-            List<String> Positions = positions;
-            List<String> Supervisions = supervisions;
             // i think this is wrong as we are passing in a list of studenst and positions but then making a new list here??
             // will have to ping the database with something like get all students with "researcher name" as supervisor
             //ThreeYearAverage = AverageThreeYear();

@@ -11,7 +11,7 @@ namespace KIT206_RAP.View
     internal class ResearcherView
     {
 
-
+// take list of researchers and students
         public static void PrintAllResearchers(List<Researcher> ResearcherList)
         {
             /*Upon application start up, the user shall be presented with an interactive list of researchers (consisting of both staff and research
@@ -38,7 +38,7 @@ namespace KIT206_RAP.View
             foreach (Researcher researcher in ResearcherList)
             {
 
-                Console.WriteLine("     " + researcher.FirstName + "\t" + researcher.LastName + "(" + researcher.Title + ")\t" + researcher.positionLevle + "\t" + researcher.IsStudent);
+                Console.WriteLine("     " + researcher.FirstName + "\t" + researcher.LastName + "(" + researcher.Title + ")\t"  + "\t" + researcher.IsStudent);
             }
             
             /* below works, sorts researchers by first name, would need to add an option to the menu to 

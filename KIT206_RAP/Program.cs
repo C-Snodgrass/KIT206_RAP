@@ -22,6 +22,7 @@ namespace KIT206_RAP
             // fetch all staff
             // SELECT * FROM students;
             // SELECT name, age FROM students;
+
             ResearcherControl.DisplayResearchers();
 
             // fetch all students 

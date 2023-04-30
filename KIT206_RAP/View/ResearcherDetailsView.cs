@@ -56,9 +56,9 @@ namespace KIT206_RAP.View
             Console.WriteLine("Name: " + student.FirstName + " " + student.LastName);
             Console.WriteLine("Tite: " + student.Title);
             Console.WriteLine("School/Unit: " + student.SchoolUnit);
-            Console.WriteLine("Campus: " + student.Campus);
+            Console.WriteLine("Campus: " + student.Camp);
             Console.WriteLine("Email: " + student.Email);
-            Console.WriteLine("Photo: " + student.photoPlaceHolder);
+            Console.WriteLine("Photo: " + student.photoURL);
             Console.WriteLine("Current Job Title" + student.CurrentJobTitle);
             Console.WriteLine("Commenced with Institution: " + student.CommencedWithInstitution);
             Console.WriteLine("Commecnce curr Pos: " + student.CommenceCurrentPosition);
@@ -90,9 +90,9 @@ namespace KIT206_RAP.View
             Console.WriteLine("Name: " + staff.FirstName + " " + staff.LastName);
             Console.WriteLine("Tite: " + staff.Title);
             Console.WriteLine("School/Unit: " + staff.SchoolUnit);
-            Console.WriteLine("Campus: " + staff.Campus);
+            Console.WriteLine("Campus: " + staff.Camp);
             Console.WriteLine("Email: " + staff.Email);
-            Console.WriteLine("Photo: " + staff.photoPlaceHolder);
+            Console.WriteLine("Photo: " + staff.photoURL);
             //Console.WriteLine("Current Job Title" + staff.CurrentJobTitle);
             Console.WriteLine("Commenced with Institution: " + staff.CommencedWithInstitution);
             Console.WriteLine("Commecnce curr Pos: " + staff.CommenceCurrentPosition);

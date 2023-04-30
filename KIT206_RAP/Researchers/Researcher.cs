@@ -4,6 +4,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
+
 namespace KIT206_RAP.Researchers
 
 {
@@ -17,37 +19,74 @@ namespace KIT206_RAP.Researchers
     internal class Researcher
     {
         // Properties some of these are not necisary
+        public int ID { get; set; }
+        public string Type { get; set; }
         public string FirstName { get; set; }
+        public bool IsStudent { get; set; }
         public string LastName { get; set; }
         public string Title { get; set; }
-        public bool IsStudent { get; set; }
         public string SchoolUnit { get; set; }
         public string Email { get; set; }
+        public string photoURL{ get; set; }
+        public string Degree { get; set; }
         public string CurrentJobTitle { get; set; }
         public DateTime CommenceCurrentPosition { get; private set; }
         public DateTime CommencedWithInstitution { get; private set; }
         public double Q1Percentage { get; private set; }
         public string JobTitle { get; set; }
         public double ExpectedNoPublications { get; set; }
-        public Campus Campus { get; set; }
-        public string photoPlaceHolder { get; set; }
+        public Campus Camp { get; set; }
         public double Tenure { get; private set; } // time in fractional years since the researcher commecned with the institution
-        public Level positionLevle { get; set; }
+        //public Level positionLevle { get; set; }
 
         // Constructor
-        public Researcher(string firstName, string lastName, String title, bool isStudent, Campus campus, string schoolUnit, string email, Level level)
+        public Researcher(int iD, string type, string firstName, string lastName, String title, string schoolUnit,
+            string campHouse, string email, string photURL, DateTime utas_start, DateTime curretn_start)
         {
+            ID = iD;
+            Type = type;
             FirstName = firstName;
             LastName = lastName;
             SchoolUnit = schoolUnit;
-            IsStudent = isStudent;
             Email = email;
-            positionLevle = level;
-            photoPlaceHolder = FetchPhoto();
+            photoURL = photURL;
+            //positionLevle = CalcPosLevel(lev);
+            Camp = CampCalc(campHouse);
+            //photoPlaceHolder = FetchPhoto();
             Title = title;
-            DeriveJobTitle(level);
+            //DeriveJobTitle(positionLevle);
+            this.photoURL = photoURL;
+            CommencedWithInstitution = utas_start;
+            CommenceCurrentPosition = curretn_start;
         }
-        
+        public Level CalcPosLevel(string lev)
+        {
+            if (lev.Equals("A"))
+            {
+                return Level.A;
+            }else if (lev.Equals("B"))
+            {
+                return Level.B;
+            }else if (lev.Equals("C"))
+            {
+                return Level.C;
+            }
+            return Level.D;
+
+
+        }
+        public Campus CampCalc(string strCamp)
+        {
+            
+            if (strCamp.Equals("Hobart")){
+                return Campus.Hobart;
+            }else if (strCamp.Equals("Launceston"))
+            {
+                return Campus.Launceston;
+            }
+            return Campus.Cradle_Coast;
+        }
+
         public void DeriveJobTitle(Level level)
         {
 

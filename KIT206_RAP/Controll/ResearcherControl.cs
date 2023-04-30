@@ -40,16 +40,16 @@ namespace KIT206_RAP.Controll
             {
                 // get researcher details for staff DB
                 Console.WriteLine("is a staff");
-                Staff staffMember = DBAdapter.GenerateStaffMember(researcher);
-                ResearcherDetailsView.DisplayResearcherDetailsViewStaff(staffMember);
+                //Staff staffMember = DBAdapter.GenerateStaffMember(researcher);
+                //ResearcherDetailsView.DisplayResearcherDetailsViewStaff(staffMember);
 
             }
             else
             {
                 Console.WriteLine("is a student");
                 // get researcher details for student DB
-                Student student = DBAdapter.GenerateStudentMember(researcher);
-                ResearcherDetailsView.DisplayResearcherDetailsViewStudent(student);
+                //Student student = DBAdapter.GenerateStudentMember(researcher);
+                //ResearcherDetailsView.DisplayResearcherDetailsViewStudent(student);
             }
 
         }
