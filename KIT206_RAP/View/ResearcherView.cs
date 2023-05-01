@@ -11,7 +11,6 @@ namespace KIT206_RAP.View
     internal class ResearcherView
     {
 
-
         public static void PrintAllResearchers(List<Researcher> ResList)
         {
             Console.WriteLine("---\t---\tThis is the MainView\t---\t---");
@@ -30,6 +29,18 @@ namespace KIT206_RAP.View
                     Console.WriteLine(res.Type +" "+ res.FirstName +" "+ res.LastName);
                 }
             }
+            Console.WriteLine("sort by first");
+            SortByFirstName(ResList);
+
+            Console.WriteLine("sort by Last");
+            SortByLastName(ResList);
+
+            Console.WriteLine(" reverse sort by first");
+            ReverseSortByFirstName(ResList);
+            Console.WriteLine("reverse sort by Last");
+            ReverseSortByLastName(ResList);
+            
+            
             Console.WriteLine("Select researcher form the list wil line no");
             // get user input for the desired line number
                
@@ -42,10 +53,39 @@ namespace KIT206_RAP.View
             Console.WriteLine("you sleected " + selectedLine + "which is " + selectedResearcher.FirstName);
             Console.WriteLine(selectedResearcher.ID);
             ResearcherControl.DisplayResearcherDetails(selectedResearcher);
-
-
         }
-        
+        public static List<Researcher> SortByFirstName(List<Researcher> ResList){
+            ResList.Sort((x, y) => x.FirstName.CompareTo(y.FirstName));
+            foreach(Researcher res in ResList)
+            {
+                Console.WriteLine(res.FirstName);
+            }
+            return ResList;
+        }
+        public static List<Researcher> SortByLastName(List<Researcher> ResList)
+        {
+            ResList.Sort((x, y) => x.LastName.CompareTo(y.LastName));
+            foreach(Researcher res in ResList)
+            {
+                Console.WriteLine(res.LastName);
+            }return ResList;
+        }
+        public static List<Researcher> ReverseSortByFirstName(List<Researcher> ResList){
+            ResList.Sort((x, y) => y.FirstName.CompareTo(x.FirstName));
+            foreach(Researcher res in ResList)
+            {
+                Console.WriteLine(res.FirstName);
+            }return ResList;
+        }
+       public static List<Researcher> ReverseSortByLastName(List<Researcher> ResList)
+        {
+            ResList.Sort((x, y) => y.LastName.CompareTo(x.LastName));
+            foreach(Researcher res in ResList)
+            {
+                Console.WriteLine(res.LastName);
+            }
+            return ResList;
+        }
         public static void PrintAllResearchers(List<Student> StuList, List<Staff> StaList)
         {
             /*Upon application start up, the user shall be presented with an interactive list of researchers (consisting of both staff and research
@@ -79,16 +119,7 @@ namespace KIT206_RAP.View
                 Console.WriteLine(stu.Type + " " + stu.FirstName + "" + " " + stu.LastName);
             }
 
-            /* below works, sorts researchers by first name, would need to add an option to the menu to 
-             * call below function
-            SortResearchersByFirstName(ResearcherList);
-            Console.WriteLine("sorted list is...);
-            foreach (Researcher researcher in ResearcherList)
-            {
-
-                Console.WriteLine("     " + researcher.FirstName + "\t" + researcher.LastName + "(" + researcher.Title + ")\t" + researcher.positionLevle + "\t" + researcher.IsStudent);
-            }
-            */
+            
             Console.WriteLine("Select researcher form the list wil line no");
             // get user input for the desired line number
             int count = StaList.Count + StuList.Count;
