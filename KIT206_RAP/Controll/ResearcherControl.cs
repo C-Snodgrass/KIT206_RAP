@@ -19,10 +19,12 @@ namespace KIT206_RAP.Controll
             //List<Student> studentList= Agency.GenerateStudents();
             //ResearcherView.PrintAllResearchers(studentList, StaffList);
 
-            List<Researcher> ResearcherList = DBAdapter.GenerateReserchers();
+            List<Staff> StaList = DBAdapter.GetStaff();
+            List<Student> StuList = DBAdapter.GetStudent();
 
 
-            ResearcherView.PrintAllResearchers(ResearcherList);
+
+            ResearcherView.PrintAllResearchers(StuList, StaList);
         }
 
         public static void DisplayResearcherDetails(Researcher researcher)

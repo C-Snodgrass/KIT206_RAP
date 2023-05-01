@@ -12,7 +12,7 @@ namespace KIT206_RAP.View
     {
 
 // take list of researchers and students
-        public static void PrintAllResearchers(List<Researcher> ResearcherList)
+        public static void PrintAllResearchers(List<Student> StuList, List<Staff> StaList)
         {
             /*Upon application start up, the user shall be presented with an interactive list of researchers (consisting of both staff and research
              students), known hereafter as the Researcher List view.
@@ -35,12 +35,16 @@ namespace KIT206_RAP.View
 
             Console.WriteLine("---\t---\tThis is the MainView\t---\t---");
             Console.WriteLine("Family Name | Given Name (title) | Employment level | student status |");
-            foreach (Researcher researcher in ResearcherList)
+            foreach (Staff sta in StaList)
             {
-
-                Console.WriteLine("     " + researcher.FirstName + "\t" + researcher.LastName + "(" + researcher.Title + ")\t"  + "\t" + researcher.IsStudent);
+                Console.WriteLine(sta.Type +" "+ sta.FirstName +" "+ sta.LastName);
             }
-            
+
+            foreach (Student stu in StuList)
+            {
+                Console.WriteLine(stu.Type + " " + stu.FirstName + "" + " " + stu.LastName);
+            }
+
             /* below works, sorts researchers by first name, would need to add an option to the menu to 
              * call below function
             SortResearchersByFirstName(ResearcherList);
@@ -53,20 +57,23 @@ namespace KIT206_RAP.View
             */
             Console.WriteLine("Select researcher form the list wil line no");
             // get user input for the desired line number
+            int count = StaList.Count + StuList.Count;
 
             int selectedLine;
-            while (!int.TryParse(Console.ReadLine(), out selectedLine) || selectedLine < 1 || selectedLine > ResearcherList.Count)
+            while (!int.TryParse(Console.ReadLine(), out selectedLine) || selectedLine < 1 || selectedLine > count)
             {
-                Console.WriteLine($"Invalid input. Please enter a number between 1 and {ResearcherList.Count}.");
+                Console.WriteLine($"Invalid input. Please enter a number between 1 and {count}.");
             }
-
-            // get the selected researcher
-            Researcher selectedResearcher = ResearcherList[selectedLine - 1];
-
-            // use the selected researcher as desired
-            Console.WriteLine("you selected: " + selectedResearcher.FirstName + selectedResearcher.LastName);
-
-            ResearcherControl.DisplayResearcherDetails(selectedResearcher);
+            if (selectedLine <= StuList.Count)
+            {
+                Student selectedStudent = StuList[selectedLine - 1];
+                //ResearcherControl.DisplayStudentDetails(selectedStudent);
+            }
+            else
+            {
+                Staff selectedStaff = StaList[selectedLine - 1];
+                //ResearcherControl.DisplayStaffDetails(selectedStaff);
+            }
 
         } 
             

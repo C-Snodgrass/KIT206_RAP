@@ -13,23 +13,6 @@ using MySql.Data.MySqlClient;
 namespace KIT206_RAP.DataBase
 {
 
-    class testResearch
-    {
-        public int ID { get; set; }
-        public string Type { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Title { get; set; }
-
-        public testResearch(int id, string type, string fname, string lname, string title)
-        {
-            ID = id;
-            Type = type;
-            FirstName = fname;
-            LastName = lname;
-            Title = title;
-        }
-    }
     class DBAdapter 
     {
         //Note that ordinarily these would (1) be stored in a settings file and (2) have some basic encryption applied
@@ -49,41 +32,90 @@ namespace KIT206_RAP.DataBase
             string connectionString = String.Format("Database={0};Data Source={1};User Id={2};Password={3}", db, server, user, pass);
             conn = new MySqlConnection(connectionString);
         }
-        public static void TestData()
+        public static List<Staff> GetStaff()
         {
-            Console.WriteLine("testing has begun");
-
+            MySqlDataReader rdr = null;
             DBAdapter demo = new DBAdapter();
 
-            int count = demo.GetNumberOfRecords();
-            Console.WriteLine("Number of researcher records: {0}", count);
-            Console.WriteLine();
-            Console.WriteLine("Names from researcher table:");
-            demo.ReadData();
-            Console.WriteLine();
-            Console.WriteLine("Names read into a DataSet (should be the same as above):");
-            demo.ReadIntoDataSet();
+            List<Staff> Staff = new List<Staff>();
+            try
+            {
+                 
+                // Open the connection
+                demo.conn.Open();
 
-            Console.ReadLine();
+                // 1. Instantiate a new command with a query and connection
+                MySqlCommand cmd = new MySqlCommand("select  * from researcher", demo.conn);
+                //MySqlCommand pubs = new MySqlCommand("select  * from publications where id is xxxxx", conn);
+                //MySqlCommand supervisors = new MySqlCommand("select  * from rese where sup is xxxxx", conn);
+
+                // 2. Call Execute reader to get query results
+                rdr = cmd.ExecuteReader();
+                // print the CategoryName of each record
+                while (rdr.Read())
+                {
+                    string type = rdr[1].ToString();
+
+                    if (type.Equals("Staff"))
+                    {
+                        var id = rdr.GetInt32("id");
+                        var firstName = rdr.GetString("given_name");
+                        var lastName = rdr.GetString("family_name");
+                        var title = rdr.GetString("title");
+                        var unit = rdr.GetString("unit");
+                        var campus = rdr.GetString("campus");
+                        var email = rdr.GetString("email");
+                        var photo = rdr.GetString("photo");
+                        var lev = rdr.GetString("level");
+                        var utas_start = rdr.GetDateTime("utas_start");
+                        var cur_start = rdr.GetDateTime("current_start");
+
+                        Staff sta = new Staff(id, type, firstName, lastName, title, unit, campus, email, photo, lev, utas_start, cur_start);
+                        Staff.Add(sta);
+                    }
+                }
+                
+                Console.WriteLine("\n\t\t StAff");
+                foreach (Staff sta in Staff)
+                {
+                Console.WriteLine(sta.Type +" "+ sta.FirstName +" "+ sta.LastName);
+                }
+            }
+
+            finally
+            {
+                // close the reader
+                if (rdr != null)
+                {
+                    rdr.Close();
+                }
+
+                // Close the connection
+                if (demo.conn != null)
+                {
+                    demo.conn.Close();
+                }
+            }
+            return Staff;
         }
+
 
         /*
          * Using the ExecuteReader method to select from a single table
          */
-        public List<testResearch> ReadData()
+        public static List<Student> GetStudent()
         {
             MySqlDataReader rdr = null;
+            DBAdapter demo = new DBAdapter();
+            List<Student> Students = new List<Student>();
 
-            List<testResearch> researchers = new List<testResearch>();
-            List<Staff> testStaff = new List<Staff>();
-            List<Student> testStudents = new List<Student>();
             try
             {
                 // Open the connection
-                conn.Open();
+                demo.conn.Open();
 
                 // 1. Instantiate a new command with a query and connection
-                MySqlCommand cmd = new MySqlCommand("select  * from researcher", conn);
+                MySqlCommand cmd = new MySqlCommand("select  * from researcher", demo.conn);
                 //MySqlCommand pubs = new MySqlCommand("select  * from publications where id is xxxxx", conn);
                 //MySqlCommand supervisors = new MySqlCommand("select  * from rese where sup is xxxxx", conn);
 
@@ -109,47 +141,18 @@ namespace KIT206_RAP.DataBase
                         var cur_start = rdr.GetDateTime("current_start");
 
                         Student stu = new Student(id, type, firstName, lastName, title, unit, campus, email, photo, superID, degree, utas_start, cur_start);
-                        testStudents.Add(stu);
+                        Students.Add(stu);
 
                         Console.WriteLine("we ahve a student");
-
                     }
-                    else
-                    {
-                        var id = rdr.GetInt32("id");
-                        var firstName = rdr.GetString("given_name");
-                        var lastName = rdr.GetString("family_name");
-                        var title = rdr.GetString("title");
-                        var unit = rdr.GetString("unit");
-                        var campus = rdr.GetString("campus");
-                        var email = rdr.GetString("email");
-                        var photo = rdr.GetString("photo");
-                        var lev = rdr.GetString("level");
-                        var utas_start = rdr.GetDateTime("utas_start");
-                        var cur_start = rdr.GetDateTime("current_start");
-                        Console.WriteLine("teacher");
-                        Staff sta = new Staff(id, type, firstName, lastName, title, unit, campus, email, photo, lev, utas_start, cur_start);
-                        testStaff.Add(sta);
-
-                    }
-                       
-
-                    //researchers.Add(new testResearch(id, type, firstName, lastName, title));
-
-                    //This illustrates how the raw data can be obtained using an indexer [] or a particular data type can be obtained using a GetTYPENAME() method.
-                    Console.WriteLine("{0} {1}", rdr[0], rdr.GetString(1));
+                      
                 }
                     Console.WriteLine("\n\t\t Students");
-                    foreach (Student stu in testStudents)
+                    foreach (Student stu in Students)
                     {
                         Console.WriteLine(stu.Type +" "+ stu.FirstName +" "+ stu.LastName);
                     }
 
-                    Console.WriteLine("\n\t\t StAff");
-                     foreach (Staff sta in testStaff)
-                    {
-                        Console.WriteLine(sta.Type +" "+ sta.FirstName +" "+ sta.LastName);
-                    }
             }
 
             finally
@@ -161,38 +164,12 @@ namespace KIT206_RAP.DataBase
                 }
 
                 // Close the connection
-                if (conn != null)
+                if (demo.conn != null)
                 {
-                    conn.Close();
+                    demo.conn.Close();
                 }
             }
-            foreach (testResearch res in researchers)
-            {
-                Console.WriteLine(res.ID +" "+res.Type+res.LastName+ res.FirstName);
-            }
-            return researchers;
-                                
-                    //if (rdr[10]!= null && rdr[9] != null) // Creates a student
-                    //{
-                    //    researcher.Add(new Researcher(/*ID*/Convert.ToInt32(rdr[0]), 
-                    //        /*is stu??*/rdr[1].ToString(), 
-                    //        /*fname*/rdr[2].ToString(),
-                    //        /*lname*/rdr[3].ToString(), 
-                    //        /*title*/rdr[4].ToString(), 
-                    //        /*unit*/rdr[5].ToString(),
-                    //    /*camphouse*/rdr[6].ToString(), 
-                    //    /*email*/rdr[7].ToString(), /*photo*/rdr[8].ToString(), /*degree*/rdr[9].ToString(), /*supID*/Convert.ToInt32(rdr[10]), /*Level*/"NULL", new DateTime(2022, 1, 1), new DateTime(2022, 1, 1)));
-                        
-                    //}else if (rdr[10]== null && rdr[9] == null) // CREATES A teacher
-                    //{
-                    //     researcher.Add(new Researcher(/*ID*/Convert.ToInt32(rdr[0]), /*is stu??*/rdr[1].ToString(), /*fname*/rdr[2].ToString(), /*lname*/rdr[3].ToString(), /*title*/rdr[4].ToString(), /*unit*/rdr[5].ToString(),
-                    //     /*camphouse*/rdr[6].ToString(), /*email*/rdr[7].ToString(), /*photo*/rdr[8].ToString(), /*degree*/"NULL", /*supID 0000 is null value*/0000, /*Level*/rdr[11].ToString(), new DateTime(2022, 1, 1), new DateTime(2022, 1, 1)));
-                        
-                    //}
-                                            //researcher.Add(new Researcher(Convert.ToInt32(rdr[0]), rdr[1].ToString(), rdr[2].ToString(), rdr[2].ToString(), rdr[4].ToString(), rdr[5].ToString(), resCamp, rdr[6].ToString(), Level.A););)
-                       
-                    
-                    //This illustrates how the raw data can be obtained using an indexer [] or a particular data type can be obtained using a GetTYPENAME() method.
+            return Students;
         }
 
 
@@ -253,60 +230,7 @@ namespace KIT206_RAP.DataBase
             }
             return count;
         }
-
-
-        public static List<Researcher> GenerateReserchers()
-        {
-
-            return new List<Researcher>() {
-               // new Researcher("Paul", "McCartney", "DR", false, Campus.Hobart, "Computers", "email@email", Level.A),
-                //new Researcher("Chris", "Snodgrass", "DR", true, Campus.Hobart, "Computers", "email@email.com", Level.D),
-                //new Researcher("Ringo", "Star", "MR", false, Campus.Hobart, "Computers", "email@email",  Level.B),
-                //new Researcher("Jane", "Snodgrass", "MR", true, Campus.Launceston, "Bio", "email@email.com", Level.D)
-            };
-
-        }
-/*
-        public static Staff GenerateStaffMember(Researcher researcher)
-        {
-
-            // this will be a LINQ / SQL statement to hit the DB for the appropriate researcher
-            Staff staffMember = new Staff(researcher.ID, researcher.Type, researcher.FirstName, researcher.LastName, researcher.Title, researcher.IsStudent, researcher.Camp, researcher.SchoolUnit, researcher.Email, 1000, new List<string> { "Stu_coordinator", "Cleaning", "groundsman" }, new List<string> { "Jim", "Jane", "Joe" }, researcher.positionLevle);
-            return staffMember;
-        }
-
-        public static Student GenerateStudentMember(Researcher researcher)
-        {
-            
-            Student studentMember = new Student(researcher.ID, researcher.Type, researcher.FirstName, researcher.LastName, researcher.Title, researcher.IsStudent, researcher.Camp, researcher.SchoolUnit, researcher.Email, "John Lennon", "computer Science",  researcher.positionLevle);
-            return studentMember;
-        }
-*/
-        /*
-        public static List<Staff> GenerateStaff()
-        {
-            return new List<Staff>() {
-                    new Staff("Paul", "McCartney", "DR", Campus.Hobart, "Computers", "email@email", 10000, new List<string> {"Stu_coordinator", "Cleaning", "groundsman"},  new List<string> {"Jim", "Jane", "Joe"}),
-                    new Staff("Ringo", "Star", "MR", Campus.Hobart, "Computers", "email@email", 10000, new List<string> {"Stu_coordinator", "Cleaning", "groundsman"},  new List<string> {"Jim", "Jane", "Joe"}),
-                    new Staff("John", "Lennon", "MRS", Campus.Hobart, "Computers", "email@email", 10000, new List<string> {"Stu_coordinator", "Cleaning", "groundsman"},  new List<string> {"Jim", "Jane", "Joe"}),
-                    new Staff("George", "Harrison", "DR", Campus.Hobart, "Computers", "email@email", 10000, new List<string> {"Stu_coordinator", "Cleaning", "groundsman"},  new List<string> {"Jim", "Jane", "Joe"}),
-
-            };
-        }
-
-        public static List<Student> GenerateStudents()
-        {
-            return new List<Student>()
-            {
-                new Student("Chris", "Snodgrass", "DR", Campus.Hobart, "Computers", "email@email.com", "McCartney", "BA Science"),
-                new Student("Jim", "Snodgrass", "MR", Campus.Hobart, "Computers", "email@email.com", "McCartney", "BA Science"),
-                new Student("Jane", "Snodgrass", "MR", Campus.Launceston, "Bio", "email@email.com", "McCartney", "BA Science"),
-                new Student("Joe", "Lake", "MR", Campus.Cradle_Coast, "Chem", "email@email.com", "McCartney", "BA Science")
-            };
-
-        }
-        */
-
+        
         public static List<Publication> GeneratePublications(String name)
         {
             return new List<Publication>()

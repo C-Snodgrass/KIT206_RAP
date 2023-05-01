@@ -18,7 +18,6 @@ namespace KIT206_RAP
 
         static void Main(string[] args)
         {
-            DBAdapter.TestData();
             // fetch all staff
             // SELECT * FROM students;
             // SELECT name, age FROM students;
