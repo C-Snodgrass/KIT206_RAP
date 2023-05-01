@@ -32,13 +32,14 @@ namespace KIT206_RAP.DataBase
             string connectionString = String.Format("Database={0};Data Source={1};User Id={2};Password={3}", db, server, user, pass);
             conn = new MySqlConnection(connectionString);
         }
-
+       
+        // gets the publications for any one researcher
         public static List<Publication> GetPubs(Researcher res)
         {
             MySqlDataReader rdr = null;
             DBAdapter demo = new DBAdapter();
-            // get list of DOI strings which match resercher_id
 
+            // get list of DOI strings which match resercher_id
             List<String> DOIS = new List<String>();
             try
             {
@@ -104,20 +105,19 @@ namespace KIT206_RAP.DataBase
                     rdr = cmd.ExecuteReader();
                     while (rdr.Read()) 
                     {
-        
                         var title = rdr.GetString("title");
                         var authors = rdr.GetString("authors"); // thisis just a string of authors, not researcchers
                         var year = rdr.GetInt32("year");
                         var type = rdr.GetString("type");
                         var cite_as = rdr.GetString("cite_as");
                         var available = rdr.GetDateTime("available");
+                        // i think we can get rid of the two next linke
                         cmd = new MySqlCommand("select * from publication where doi = @doi", demo.conn);
                         cmd.Parameters.AddWithValue("@id", doi);
+                        // untill here
                         Publication pub = new Publication(title, doi, authors, cite_as, available, type);
                         pubs.Add(pub);
-
                     }
-            
                 }
                 finally
                 {
@@ -140,7 +140,6 @@ namespace KIT206_RAP.DataBase
             }
             Console.WriteLine("PAUSE;");
             return pubs;
-
         }
 
         public static List<Researcher> GetResearcher()
@@ -151,16 +150,14 @@ namespace KIT206_RAP.DataBase
             List<Researcher> Researchers = new List<Researcher>();
             try
             {
-                 
                 // Open the connection
                 demo.conn.Open();
-
                 // 1. Instantiate a new command with a query and connection
                 MySqlCommand cmd = new MySqlCommand("select  * from researcher", demo.conn);
-
                 // 2. Call Execute reader to get query results
                 rdr = cmd.ExecuteReader();
                 // print the CategoryName of each record
+
                 while (rdr.Read())
                 {
                     var id = rdr.GetInt32("id");
@@ -180,7 +177,6 @@ namespace KIT206_RAP.DataBase
                     Researchers.Add(res);
                 }
             }
-
             finally
             {
                 // close the reader
@@ -268,56 +264,55 @@ namespace KIT206_RAP.DataBase
         /*
          * Using the ExecuteReader method to select from a single table
          */
-        public static List<Student> GetStudent()
+        public static Student GetStudent(int ID)
         {
+            Student Stu;
             MySqlDataReader rdr = null;
             DBAdapter demo = new DBAdapter();
-            List<Student> Students = new List<Student>();
-
             try
             {
                 // Open the connection
                 demo.conn.Open();
 
                 // 1. Instantiate a new command with a query and connection
-                MySqlCommand cmd = new MySqlCommand("select  * from researcher", demo.conn);
-                //MySqlCommand pubs = new MySqlCommand("select  * from publications where id is xxxxx", conn);
-                //MySqlCommand supervisors = new MySqlCommand("select  * from rese where sup is xxxxx", conn);
+                MySqlCommand cmd = new MySqlCommand("select * from researcher where id = @id", demo.conn);
+                cmd.Parameters.AddWithValue("@id", ID);
 
                 // 2. Call Execute reader to get query results
                 rdr = cmd.ExecuteReader();
-                // print the CategoryName of each record
                 while (rdr.Read())
                 {
-                    string type = rdr[1].ToString();
-                    if (type.Equals("Student"))
+                    Console.WriteLine("the individual is"+ rdr.GetString("given_name" ));
+                    // coud just access the fields we don't currently have in the researcher class
+                    // and coppy the fields which already exist?
+                    
+                    var type = rdr.GetString("type");   
+                    var firstName = rdr.GetString("given_name");
+                    var lastName = rdr.GetString("family_name");
+                    var title = rdr.GetString("title");
+                    var unit = rdr.GetString("unit");
+                    var campus = rdr.GetString("campus");
+                    var email = rdr.GetString("email");
+                    var photo = rdr.GetString("photo");
+                    var degree = rdr.GetString("degree");
+                    var superID = rdr.GetInt32("supervisor_id");
+                    var utas_start = rdr.GetDateTime("utas_start");
+                    var cur_start = rdr.GetDateTime("current_start");
+
+                    Stu = new Student(ID, type, firstName, lastName, title, unit, campus, email, photo, superID, degree, utas_start, cur_start);
+                    // close the reader
+                    if (rdr != null)
                     {
-                        var id = rdr.GetInt32("id");
-                        var firstName = rdr.GetString("given_name");
-                        var lastName = rdr.GetString("family_name");
-                        var title = rdr.GetString("title");
-                        var unit = rdr.GetString("unit");
-                        var campus = rdr.GetString("campus");
-                        var email = rdr.GetString("email");
-                        var photo = rdr.GetString("photo");
-                        var degree = rdr.GetString("degree");
-                        var superID = rdr.GetInt32("supervisor_id");
-                        var utas_start = rdr.GetDateTime("utas_start");
-                        var cur_start = rdr.GetDateTime("current_start");
-
-                        Student stu = new Student(id, type, firstName, lastName, title, unit, campus, email, photo, superID, degree, utas_start, cur_start);
-                        Students.Add(stu);
-
-                        Console.WriteLine("we ahve a student");
+                        rdr.Close();
                     }
-                      
+
+                    // Close the connection
+                    if (demo.conn != null)
+                    {
+                        demo.conn.Close();
+                    }
+                    return Stu;
                 }
-                    Console.WriteLine("\n\t\t Students");
-                    foreach (Student stu in Students)
-                    {
-                        Console.WriteLine(stu.Type +" "+ stu.FirstName +" "+ stu.LastName);
-                    }
-
             }
 
             finally
@@ -334,10 +329,81 @@ namespace KIT206_RAP.DataBase
                     demo.conn.Close();
                 }
             }
-            return Students;
+            // would rather return Stu here, how ever was not sure how
+            return null;
         }
 
+         /*
+         * Using the ExecuteReader method to select from a single table
+         */
+        public static Staff GetStaff(int ID)
+        {
+            Staff Sta;
+            MySqlDataReader rdr = null;
+            DBAdapter demo = new DBAdapter();
+            try
+            {
+                // Open the connection
+                demo.conn.Open();
 
+                // 1. Instantiate a new command with a query and connection
+                MySqlCommand cmd = new MySqlCommand("select * from researcher where id = @id", demo.conn);
+                cmd.Parameters.AddWithValue("@id", ID);
+
+                // 2. Call Execute reader to get query results
+                rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    Console.WriteLine("the individual is"+ rdr.GetString("given_name" ));
+                    // coud just access the fields we don't currently have in the researcher class
+                    // and coppy the fields which already exist?
+                    
+                    var type = rdr.GetString("type");   
+                    var firstName = rdr.GetString("given_name");
+                    var lastName = rdr.GetString("family_name");
+                    var title = rdr.GetString("title");
+                    var unit = rdr.GetString("unit");
+                    var campus = rdr.GetString("campus");
+                    var email = rdr.GetString("email");
+                    var photo = rdr.GetString("photo");
+                    var level = rdr.GetString("level");
+                    var utas_start = rdr.GetDateTime("utas_start");
+                    var cur_start = rdr.GetDateTime("current_start");
+
+                    Sta = new Staff(ID, type, firstName, lastName, title, unit, campus, email, photo, level, utas_start, cur_start);
+                    // close the reader
+                    if (rdr != null)
+                    {
+                        rdr.Close();
+                    }
+
+                    // Close the connection
+                    if (demo.conn != null)
+                    {
+                        demo.conn.Close();
+                    }
+                    return Sta;
+                }
+            }
+
+            finally
+            {
+                // close the reader
+                if (rdr != null)
+                {
+                    rdr.Close();
+                }
+
+                // Close the connection
+                if (demo.conn != null)
+                {
+                    demo.conn.Close();
+                }
+            }
+            return null;
+        }
+
+        
         /*
          * Using the ExecuteReader method to select from a single table */
         public void ReadIntoDataSet()

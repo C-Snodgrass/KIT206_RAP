@@ -29,6 +29,54 @@ namespace KIT206_RAP.Researchers
             //double funding = 100;
 
         }
+        public Level CalcPosLevel(string lev)
+        {
+            if (lev.Equals("A"))
+            {
+                return Level.A;
+            }else if (lev.Equals("B"))
+            {
+                return Level.B;
+            }else if (lev.Equals("C"))
+            {
+                return Level.C;
+            }
+            return Level.D;
+        }
+
+        public void DeriveJobTitle(Level level)
+        {
+
+            switch (level)
+            {
+                case Level.A:
+                    JobTitle = "Research Associate";
+                    ExpectedNoPublications = 0.5; 
+                    break; 
+                case Level.B:
+                    JobTitle = "Lecturer";
+                    ExpectedNoPublications = 1;
+                    break;
+
+                case Level.C:
+                    JobTitle = "Assistant Professor";
+                    ExpectedNoPublications = 2;
+                    break;
+
+                case Level.D:
+                    JobTitle = "Associate Professor";
+                    ExpectedNoPublications = 3.2;
+                    break;
+
+                case Level.E:
+                    JobTitle = "Professor";
+                    ExpectedNoPublications = 4;
+                    break;
+
+                default:
+                    throw new ArgumentException("Invalid level character");
+            }
+        }
         
        /* 
         public int AverageThreeYear()
@@ -80,6 +128,28 @@ namespace KIT206_RAP.Researchers
         // calculate performance
         // calculate perfomeance by publication
 
+  /*
+        public static void Q1PercentageCalc(Researcher researcher, List<Publication> publications)
+        {
+            int q1Count = 0;
+            int totalPublications = publications.Count;
+
+            foreach (Publication publication in publications)
+            {
+                if (publication.Ranking == RankingType.Q1)
+                {
+                    q1Count++;
+                }
+            }
+
+            double percentage = (double)q1Count / totalPublications * 100;
+            // sets the top global var...
+            researcher.Q1Percentage = percentage;
+            Console.WriteLine(researcher.Q1Percentage);
+            Console.WriteLine(researcher.Q1Percentage);
+            Console.WriteLine(researcher.Q1Percentage);
+        }
+        */
 
     }
 }

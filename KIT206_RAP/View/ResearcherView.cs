@@ -29,17 +29,17 @@ namespace KIT206_RAP.View
                     Console.WriteLine(res.Type +" "+ res.FirstName +" "+ res.LastName);
                 }
             }
+            /*
+            // below is just to demonstrate that these work
             Console.WriteLine("sort by first");
             SortByFirstName(ResList);
-
             Console.WriteLine("sort by Last");
             SortByLastName(ResList);
-
             Console.WriteLine(" reverse sort by first");
             ReverseSortByFirstName(ResList);
             Console.WriteLine("reverse sort by Last");
             ReverseSortByLastName(ResList);
-            
+           */ 
             
             Console.WriteLine("Select researcher form the list wil line no");
             // get user input for the desired line number

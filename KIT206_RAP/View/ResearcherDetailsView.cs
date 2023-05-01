@@ -44,7 +44,7 @@ namespace KIT206_RAP.View
         {
             
             // fetch publications form DB??
-            List <Publication> publications = DBAdapter.GeneratePublications(student.LastName);
+            //List <Publication> publications = DBAdapter.GeneratePublications(student.LastName);
             List<Position> posisions = DBAdapter.GeneratePositions();
             Researcher.CalcPositionInfo(student, posisions);
             //Researcher.Q1PercentageCalc(student, publications);

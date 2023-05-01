@@ -14,51 +14,44 @@ namespace KIT206_RAP.Controll
         public static void DisplayResearchers()
         {
             // old version passed list objects for student and staff
-            // now just pass researcher for first view
-            //List<Staff> StaffList =  Agency.GenerateStaff();
-            //List<Student> studentList= Agency.GenerateStudents();
-            //ResearcherView.PrintAllResearchers(studentList, StaffList);
-
             //List<Staff> StaList = DBAdapter.GetStaff();
             //List<Student> StuList = DBAdapter.GetStudent();
             List<Researcher> ResList = DBAdapter.GetResearcher();
-            
+
             ResearcherView.PrintAllResearchers(ResList);
-
-
-
             //ResearcherView.PrintAllResearchers(StuList, StaList);
         }
 
-        public static void DisplayResearcherDetails(Researcher researcher)
+        public static void DisplayResearcherDetails(Researcher Res)
         {
-            // fetch researcher publications, and then positions
-            // SELECT*
-            // FROM Publications
-            // WHERE AuthorName = 'provided_author_name';
-
             //fetch publications
-            
-            List<Publication> PubList = DBAdapter.GetPubs(researcher);
-            Console.WriteLine("puse");
+            List<Publication> PubList = DBAdapter.GetPubs(Res);
+
+            Console.WriteLine(Res.Type);
             PublicationView.PrintAllPublication(PubList);
 
-            
-            // can this if else be handled with researcher.Level == D... i.e. do all students have Level D and no staff have level D?
-            // if so can remove the IsStudent field which would be good
-            if (researcher.IsStudent ==  false)
+
+            Console.WriteLine(Res.Type);
+
+            // is my logic the right way arround on this?? pretty important one...
+            if (Res.Type == Researcher.ResearcherType.Student)
             {
-                // get researcher details for staff DB
-                Console.WriteLine("is a staff");
-                //Staff staffMember = DBAdapter.GenerateStaffMember(researcher);
+                Console.WriteLine("is a student");
+                // call the DB to get the additional info
+                Student Sta = DBAdapter.GetStudent(Res.ID);
+                // create the staff with all the additional stuff they need
+                // probably need to pass the publicaitons lit
                 //ResearcherDetailsView.DisplayResearcherDetailsViewStaff(staffMember);
 
             }
             else
             {
-                Console.WriteLine("is a student");
-                // get researcher details for student DB
-                //Student student = DBAdapter.GenerateStudentMember(researcher);
+                Console.WriteLine("is a staff");
+                // create student 
+                Staff sta = DBAdapter.GetStaff(Res.ID);
+                // call the DB to get the additiaonl info.
+
+                // probably need to pass the publications list
                 //ResearcherDetailsView.DisplayResearcherDetailsViewStudent(student);
             }
 
@@ -69,16 +62,8 @@ namespace KIT206_RAP.Controll
             PerformaceDetailsView.PrintPerformanceView(researcehr);
         }
 
-        public static List<Publication> GetPublications(Researcher researcher)
-        {
-            Console.WriteLine("getting the pubs");
-            Console.WriteLine("getting the pubs");
-            Console.WriteLine("getting the pubs");
-            Console.WriteLine("getting the pubs");
-            return DBAdapter.GeneratePublications(researcher.LastName);
-        }
-
-
 
     }
+
 }
+

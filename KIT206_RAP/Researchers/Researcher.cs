@@ -20,7 +20,7 @@ namespace KIT206_RAP.Researchers
     {
         // Properties some of these are not necisary
         public int ID { get; set; }
-        public string Type { get; set; }
+        public ResearcherType Type { get; set; }
         public string FirstName { get; set; }
         public bool IsStudent { get; set; }
         public string LastName { get; set; }
@@ -44,12 +44,13 @@ namespace KIT206_RAP.Researchers
             string campHouse, string email, string photURL, DateTime utas_start, DateTime curretn_start)
         {
             ID = iD;
-            Type = type;
+            Type = (ResearcherType)Enum.Parse(typeof(ResearcherType), type);
             FirstName = firstName;
             LastName = lastName;
             SchoolUnit = schoolUnit;
             Email = email;
             photoURL = photURL;
+            
             //positionLevle = CalcPosLevel(lev);
             Camp = CampCalc(campHouse);
             //photoPlaceHolder = FetchPhoto();
@@ -59,22 +60,7 @@ namespace KIT206_RAP.Researchers
             CommencedWithInstitution = utas_start;
             CommenceCurrentPosition = curretn_start;
         }
-        public Level CalcPosLevel(string lev)
-        {
-            if (lev.Equals("A"))
-            {
-                return Level.A;
-            }else if (lev.Equals("B"))
-            {
-                return Level.B;
-            }else if (lev.Equals("C"))
-            {
-                return Level.C;
-            }
-            return Level.D;
-
-
-        }
+        
         public Campus CampCalc(string strCamp)
         {
             
@@ -87,40 +73,7 @@ namespace KIT206_RAP.Researchers
             return Campus.Cradle_Coast;
         }
 
-        public void DeriveJobTitle(Level level)
-        {
-
-            switch (level)
-            {
-                case Level.A:
-                    JobTitle = "Research Associate";
-                    ExpectedNoPublications = 0.5; 
-                    break; 
-                case Level.B:
-                    JobTitle = "Lecturer";
-                    ExpectedNoPublications = 1;
-                    break;
-
-                case Level.C:
-                    JobTitle = "Assistant Professor";
-                    ExpectedNoPublications = 2;
-                    break;
-
-                case Level.D:
-                    JobTitle = "Associate Professor";
-                    ExpectedNoPublications = 3.2;
-                    break;
-
-                case Level.E:
-                    JobTitle = "Professor";
-                    ExpectedNoPublications = 4;
-                    break;
-
-                default:
-                    throw new ArgumentException("Invalid level character");
-            }
-            
-        }
+        
         
         // these do not happen in the constructor
         // if the db returns a list of positions with the researcher i say we itterate / loop through them
@@ -199,29 +152,12 @@ namespace KIT206_RAP.Researchers
 
             return placeHolder;
         }
-       
-        /*
-        public static void Q1PercentageCalc(Researcher researcher, List<Publication> publications)
+        public enum ResearcherType
         {
-            int q1Count = 0;
-            int totalPublications = publications.Count;
-
-            foreach (Publication publication in publications)
-            {
-                if (publication.Ranking == RankingType.Q1)
-                {
-                    q1Count++;
-                }
-            }
-
-            double percentage = (double)q1Count / totalPublications * 100;
-            // sets the top global var...
-            researcher.Q1Percentage = percentage;
-            Console.WriteLine(researcher.Q1Percentage);
-            Console.WriteLine(researcher.Q1Percentage);
-            Console.WriteLine(researcher.Q1Percentage);
+            Student,
+            Staff
         }
-        */
+
     }
 }
 
