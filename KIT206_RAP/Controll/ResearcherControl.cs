@@ -19,22 +19,30 @@ namespace KIT206_RAP.Controll
             //List<Student> studentList= Agency.GenerateStudents();
             //ResearcherView.PrintAllResearchers(studentList, StaffList);
 
-            List<Staff> StaList = DBAdapter.GetStaff();
-            List<Student> StuList = DBAdapter.GetStudent();
+            //List<Staff> StaList = DBAdapter.GetStaff();
+            //List<Student> StuList = DBAdapter.GetStudent();
+            List<Researcher> ResList = DBAdapter.GetResearcher();
+            
+            ResearcherView.PrintAllResearchers(ResList);
 
 
 
-            ResearcherView.PrintAllResearchers(StuList, StaList);
+            //ResearcherView.PrintAllResearchers(StuList, StaList);
         }
 
         public static void DisplayResearcherDetails(Researcher researcher)
         {
-                        // fetch researcher publications, and then positions
+            // fetch researcher publications, and then positions
             // SELECT*
             // FROM Publications
             // WHERE AuthorName = 'provided_author_name';
 
-            Console.WriteLine("Q1 percentage for" + researcher.FirstName + " is " );
+            //fetch publications
+            
+            List<Publication> PubList = DBAdapter.GetPubs(researcher);
+            Console.WriteLine("puse");
+            PublicationView.PrintAllPublication(PubList);
+
             
             // can this if else be handled with researcher.Level == D... i.e. do all students have Level D and no staff have level D?
             // if so can remove the IsStudent field which would be good

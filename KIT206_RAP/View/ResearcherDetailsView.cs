@@ -47,7 +47,7 @@ namespace KIT206_RAP.View
             List <Publication> publications = DBAdapter.GeneratePublications(student.LastName);
             List<Position> posisions = DBAdapter.GeneratePositions();
             Researcher.CalcPositionInfo(student, posisions);
-            Researcher.Q1PercentageCalc(student, publications);
+            //Researcher.Q1PercentageCalc(student, publications);
 
 
             Console.WriteLine("---\t---\tWelcome to Researcher Details View\t---\t---");

@@ -35,7 +35,7 @@ namespace KIT206_RAP.View
         public static void PrintPerformanceView(Researcher researcher)
         {
             List<Publication> publications = ResearcherControl.GetPublications(researcher);
-            Researcher.Q1PercentageCalc(researcher, publications);
+            //Researcher.Q1PercentageCalc(researcher, publications);
 
                
 

@@ -199,7 +199,8 @@ namespace KIT206_RAP.Researchers
 
             return placeHolder;
         }
-        
+       
+        /*
         public static void Q1PercentageCalc(Researcher researcher, List<Publication> publications)
         {
             int q1Count = 0;
@@ -220,6 +221,7 @@ namespace KIT206_RAP.Researchers
             Console.WriteLine(researcher.Q1Percentage);
             Console.WriteLine(researcher.Q1Percentage);
         }
+        */
     }
 }
 

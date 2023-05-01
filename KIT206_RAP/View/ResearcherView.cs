@@ -11,7 +11,41 @@ namespace KIT206_RAP.View
     internal class ResearcherView
     {
 
-// take list of researchers and students
+
+        public static void PrintAllResearchers(List<Researcher> ResList)
+        {
+            Console.WriteLine("---\t---\tThis is the MainView\t---\t---");
+            Console.WriteLine("Family Name | Given Name (title) | Employment level | student status |");
+            // here we will display different infor depending on if they are a student or not
+            foreach (Researcher res in ResList)
+            {
+                if (res.Type.Equals("Student"))
+                {
+                    // display specific student stuff... they have a degree and a super, but not type???
+                    Console.WriteLine(res.Type +" "+ res.FirstName +" "+ res.LastName);
+                }
+                else
+                {
+                    // display specific staff stuff... they have a level but no deggree or super??? 
+                    Console.WriteLine(res.Type +" "+ res.FirstName +" "+ res.LastName);
+                }
+            }
+            Console.WriteLine("Select researcher form the list wil line no");
+            // get user input for the desired line number
+               
+            int selectedLine;
+            while (!int.TryParse(Console.ReadLine(), out selectedLine) || selectedLine < 1 || selectedLine > ResList.Count())
+            {
+                Console.WriteLine($"Invalid input. Please enter a number between 1 and {ResList.Count()}.");
+            }
+            Researcher selectedResearcher = ResList[selectedLine - 1];
+            Console.WriteLine("you sleected " + selectedLine + "which is " + selectedResearcher.FirstName);
+            Console.WriteLine(selectedResearcher.ID);
+            ResearcherControl.DisplayResearcherDetails(selectedResearcher);
+
+
+        }
+        
         public static void PrintAllResearchers(List<Student> StuList, List<Staff> StaList)
         {
             /*Upon application start up, the user shall be presented with an interactive list of researchers (consisting of both staff and research

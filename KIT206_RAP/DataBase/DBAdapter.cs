@@ -32,6 +32,173 @@ namespace KIT206_RAP.DataBase
             string connectionString = String.Format("Database={0};Data Source={1};User Id={2};Password={3}", db, server, user, pass);
             conn = new MySqlConnection(connectionString);
         }
+
+        public static List<Publication> GetPubs(Researcher res)
+        {
+            MySqlDataReader rdr = null;
+            DBAdapter demo = new DBAdapter();
+            // get list of DOI strings which match resercher_id
+
+            List<String> DOIS = new List<String>();
+            try
+            {
+                // Open the connection
+                demo.conn.Open();
+                // 1. Instantiate a new command with a query and connection
+                MySqlCommand cmd = new MySqlCommand("select DOI from researcher_publication where researcher_id = @id", demo.conn);
+                cmd.Parameters.AddWithValue("@id", res.ID.ToString());
+
+                // 2. Call Execute reader to get query results
+                rdr = cmd.ExecuteReader();
+                // print the CategoryName of each record
+                while (rdr.Read())
+                {
+                    var DOI = rdr.GetString("doi");
+                    DOIS.Add(DOI);
+                    //Console.WriteLine(rdr.GetInt32("researcher_id"));
+                }
+                Console.WriteLine("the doi's are");
+                foreach (var DOI in DOIS)
+                {
+                    Console.WriteLine(DOI.ToString());
+                }
+
+            }
+            finally
+            {
+                // close the reader
+                if (rdr != null)
+                {
+                    rdr.Close();
+                }
+
+                // Close the connection
+                if (demo.conn != null)
+                {
+                    demo.conn.Close();
+                }
+            }
+            Console.WriteLine("PAUSE;");
+            return GetPublications(DOIS);
+        }
+
+        public static List<Publication> GetPublications(List<string> TheDOIS)
+        {
+            MySqlDataReader rdr = null;
+            DBAdapter demo = new DBAdapter();
+            // get list of DOI strings which match resercher_id
+
+            List<String> DOIS = new List<String>();
+            List<Publication> pubs = new List<Publication>();
+            foreach (string doi in TheDOIS)
+            {
+                try
+                {
+                    Console.WriteLine("the doi is " + doi);
+                    // Open the connection
+                    demo.conn.Open();
+
+                    // 1. Instantiate a new command with a query and connection
+                    MySqlCommand cmd = new MySqlCommand("select * from publication where doi = @doi", demo.conn);
+                    cmd.Parameters.AddWithValue("@doi", doi);
+                    rdr = cmd.ExecuteReader();
+                    while (rdr.Read()) 
+                    {
+        
+                        var title = rdr.GetString("title");
+                        var authors = rdr.GetString("authors"); // thisis just a string of authors, not researcchers
+                        var year = rdr.GetInt32("year");
+                        var type = rdr.GetString("type");
+                        var cite_as = rdr.GetString("cite_as");
+                        var available = rdr.GetDateTime("available");
+                        cmd = new MySqlCommand("select * from publication where doi = @doi", demo.conn);
+                        cmd.Parameters.AddWithValue("@id", doi);
+                        Publication pub = new Publication(title, doi, authors, cite_as, available, type);
+                        pubs.Add(pub);
+
+                    }
+            
+                }
+                finally
+                {
+                    // close the reader
+                    if (rdr != null)
+                    {
+                        rdr.Close();
+                    }
+
+                    // Close the connection
+                    if (demo.conn != null)
+                    {
+                        demo.conn.Close();
+                    }
+                }
+            }
+            foreach(Publication pub in pubs)
+            {
+                Console.WriteLine("pub name is " + pub.Title);
+            }
+            Console.WriteLine("PAUSE;");
+            return pubs;
+
+        }
+
+        public static List<Researcher> GetResearcher()
+        {
+            MySqlDataReader rdr = null;
+            DBAdapter demo = new DBAdapter();
+
+            List<Researcher> Researchers = new List<Researcher>();
+            try
+            {
+                 
+                // Open the connection
+                demo.conn.Open();
+
+                // 1. Instantiate a new command with a query and connection
+                MySqlCommand cmd = new MySqlCommand("select  * from researcher", demo.conn);
+
+                // 2. Call Execute reader to get query results
+                rdr = cmd.ExecuteReader();
+                // print the CategoryName of each record
+                while (rdr.Read())
+                {
+                    var id = rdr.GetInt32("id");
+                    var type = rdr.GetString("type");
+                    var firstName = rdr.GetString("given_name");
+                    var lastName = rdr.GetString("family_name");
+                    var title = rdr.GetString("title");
+                    var unit = rdr.GetString("unit");
+                    var campus = rdr.GetString("campus");
+                    var email = rdr.GetString("email");
+                    var photo = rdr.GetString("photo");
+                    var utas_start = rdr.GetDateTime("utas_start");
+                    var cur_start = rdr.GetDateTime("current_start");
+
+                    Researcher res = new Researcher(id, type, firstName, lastName, title, unit, campus, email, photo, utas_start, cur_start);
+                    Console.WriteLine("researcher added = " + res.LastName);
+                    Researchers.Add(res);
+                }
+            }
+
+            finally
+            {
+                // close the reader
+                if (rdr != null)
+                {
+                    rdr.Close();
+                }
+
+                // Close the connection
+                if (demo.conn != null)
+                {
+                    demo.conn.Close();
+                }
+            }
+            return Researchers;
+        }
+
+
         public static List<Staff> GetStaff()
         {
             MySqlDataReader rdr = null;
@@ -46,8 +213,6 @@ namespace KIT206_RAP.DataBase
 
                 // 1. Instantiate a new command with a query and connection
                 MySqlCommand cmd = new MySqlCommand("select  * from researcher", demo.conn);
-                //MySqlCommand pubs = new MySqlCommand("select  * from publications where id is xxxxx", conn);
-                //MySqlCommand supervisors = new MySqlCommand("select  * from rese where sup is xxxxx", conn);
 
                 // 2. Call Execute reader to get query results
                 rdr = cmd.ExecuteReader();
@@ -235,10 +400,6 @@ namespace KIT206_RAP.DataBase
         {
             return new List<Publication>()
             {
-                new Publication(false, new DateTime(1988, 3, 28), "Abbey Road", "doi:10.1234/abcd",new List<string>{"Jimm","Jande"},  name, new DateTime(2022, 1, 1), 190, PublicationType.Journal, RankingType.Q1),
-                new Publication(false, new DateTime(1988, 3, 28), "Revolver", "doi:10.1234/abcd", new List<string>{"Jimm","Jande"}, name, new DateTime(2022, 1, 1), 190, PublicationType.Journal, RankingType.Q1),
-                new Publication(false, new DateTime(1988, 3, 28), "Sg. Pepper", "doi:10.1234/abcd",  new List<string>{"Jimm","Jande"}, name, new DateTime(2022, 1, 1), 190, PublicationType.Journal, RankingType.Q2),
-                new Publication(false, new DateTime(1988, 3, 28), "A Hard Day's Night", "doi:10.1234/abcd", new List<string>{"Jimm","Jande"}, name, new DateTime(2022, 1, 1), 190, PublicationType.Journal, RankingType.Q2)
             
             };
         }
