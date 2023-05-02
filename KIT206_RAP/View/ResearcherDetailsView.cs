@@ -38,70 +38,59 @@ namespace KIT206_RAP.View
      */
     internal class ResearcherDetailsView
     {
-        // these two metods need to be colapsed into one, sorry i have spent too much time wiriting C lately
-        // and forgot that these can take the same think....
-        public static void DisplayResearcherDetailsViewStudent(Student student)
+        public static void DisplayResearcherDetails(Researcher Res)
         {
-            
-            // fetch publications form DB??
-            //List <Publication> publications = DBAdapter.GeneratePublications(student.LastName);
-            List<Position> posisions = DBAdapter.GeneratePositions();
-            Researcher.CalcPositionInfo(student, posisions);
-            //Researcher.Q1PercentageCalc(student, publications);
 
+            //DBAdapter.GetPubs(student);
 
             Console.WriteLine("---\t---\tWelcome to Researcher Details View\t---\t---");
             Console.WriteLine("---\t---\tYou Have Selected a Student\t---\t---");
 
-            Console.WriteLine("Name: " + student.FirstName + " " + student.LastName);
-            Console.WriteLine("Tite: " + student.Title);
-            Console.WriteLine("School/Unit: " + student.SchoolUnit);
-            Console.WriteLine("Campus: " + student.Camp);
-            Console.WriteLine("Email: " + student.Email);
-            Console.WriteLine("Photo: " + student.photoURL);
-            Console.WriteLine("Current Job Title" + student.CurrentJobTitle);
-            Console.WriteLine("Commenced with Institution: " + student.CommencedWithInstitution);
-            Console.WriteLine("Commecnce curr Pos: " + student.CommenceCurrentPosition);
-            Console.WriteLine("Tenure: " + student.Tenure);
-            Console.WriteLine("Degree: " + student.Degree);
-            Console.WriteLine("Tenure: " + student.Supervisor);
+            Console.WriteLine("Name: " + Res.FirstName + " " + Res.LastName);
+            //Console.WriteLine("Tite: " + student.Title);
+            Console.WriteLine("School/Unit: " + Res.SchoolUnit);
+            Console.WriteLine("Campus: " + Res.Camp);
+            Console.WriteLine("Email: " + Res.Email);
+            Console.WriteLine("Photo: " + Res.photoURL);
+            Console.WriteLine("Current Job Title" + Res.CurrentJobTitle);
+            Console.WriteLine("Commenced with Institution: " + Res.CommencedWithInstitution);
+            Console.WriteLine("Commecnce curr Pos: " + Res.CommenceCurrentPosition);
+            //Console.WriteLine("Tenure: " + student.Tenure);
+            Console.WriteLine("Degree: " + Res.Degree);
+            //Console.WriteLine("Tenure: " + Res.Supervisor);
+            if (Res is Staff staff)
+            {
+                // display specific student stuff... they have a degree and a super, but not type???
+                // display supervisions, this loop should be moved?
+                Console.WriteLine("LINQ Statements....");
+                Console.WriteLine("supervisions are");
+                staff.Supervisions.ForEach(res => Console.WriteLine($"Supervises {res.FirstName} {res.LastName}"));
+                Console.WriteLine("Stff memb positions are.... ");
+                staff.Positions.ForEach(pos => Console.WriteLine($"{pos.StartDate} {pos.EndDate}"));
 
-            ResearcherControl.DisplayPerformanceDetails(student);
-        }
+                /*
+                foreach (Researcher res in staff.Supervisions)
+                {
+                    Console.WriteLine($"Supervises {res.FirstName} {res.LastName}");
+                }
+                Console.WriteLine("Stff memb positions are.... ");
+                foreach (Position pos in staff.Positions)
+                {
+                    Console.WriteLine(pos.StartDate + " " + pos.EndDate);
+                }
+                */
 
-        public static void DisplayResearcherDetailsViewStaff(Staff staff)
-        {
-            // fetch publications form DB?? 
-            //Console.WriteLine("Publications: " + staff.Publications);
-            List<Position> posisions = DBAdapter.GeneratePositions();
-            Researcher.CalcPositionInfo(staff, posisions);
-            // this would call the DB and do something like...
-            // someting like this to get th 
-            // SELECT *
-            // FROM Students
-            // WHERE Supervisor = staff.lastName;
-            List<string> supervisions = new List<string>();
-            supervisions.Add("These are");
-            supervisions.Add("Hard Coded");
-            supervisions.Add("Supervisions");
+            }
+            if (Res is Student student)
+            {
+                Console.WriteLine($"Student {student.FirstName} {student.LastName}, Supervisor {student.Supervisor}");
+            }
 
-            Console.WriteLine("---\t---\tWelcome to Researcher Details View\t---\t---");
-            Console.WriteLine("---\t---\tYOU HAVE SELECTED A STAFF MEMBER\t---\t---");
-            Console.WriteLine("Name: " + staff.FirstName + " " + staff.LastName);
-            Console.WriteLine("Tite: " + staff.Title);
-            Console.WriteLine("School/Unit: " + staff.SchoolUnit);
-            Console.WriteLine("Campus: " + staff.Camp);
-            Console.WriteLine("Email: " + staff.Email);
-            Console.WriteLine("Photo: " + staff.photoURL);
-            //Console.WriteLine("Current Job Title" + staff.CurrentJobTitle);
-            Console.WriteLine("Commenced with Institution: " + staff.CommencedWithInstitution);
-            Console.WriteLine("Commecnce curr Pos: " + staff.CommenceCurrentPosition);
-            Console.WriteLine("Tenure: " + staff.Tenure);
-            
-            ResearcherControl.DisplayPerformanceDetails(staff);
+            Console.WriteLine("PAUSE");
+            Console.WriteLine("PAUSE");
+            Console.WriteLine("PAUSE");
 
         }
-
 
     }
 }

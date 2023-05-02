@@ -80,10 +80,10 @@ namespace KIT206_RAP.DataBase
                 }
             }
             Console.WriteLine("PAUSE;");
-            return GetPublications(DOIS);
+            return GetPublications(res, DOIS);
         }
 
-        public static List<Publication> GetPublications(List<string> TheDOIS)
+        public static List<Publication> GetPublications(Researcher Res, List<string> TheDOIS)
         {
             MySqlDataReader rdr = null;
             DBAdapter demo = new DBAdapter();
@@ -116,7 +116,7 @@ namespace KIT206_RAP.DataBase
                         cmd.Parameters.AddWithValue("@id", doi);
                         // untill here
                         Publication pub = new Publication(title, doi, authors, cite_as, available, type);
-                        pubs.Add(pub);
+                        Res.Pubs.Add(pub);
                     }
                 }
                 finally
@@ -134,13 +134,68 @@ namespace KIT206_RAP.DataBase
                     }
                 }
             }
+            // used for debugging
+            /*
             foreach(Publication pub in pubs)
             {
                 Console.WriteLine("pub name is " + pub.Title);
             }
             Console.WriteLine("PAUSE;");
+            */
             return pubs;
         }
+        
+        //gets supervisions
+        public static void GetSupervisions(Staff Stf)
+        {
+            MySqlDataReader rdr = null;
+            DBAdapter demo = new DBAdapter();
+
+            List<Researcher> Researchers = new List<Researcher>();
+            try
+            {
+                // Open the connection
+                demo.conn.Open();
+                // 1. Instantiate a new command with a query and connection
+                MySqlCommand cmd = new MySqlCommand("select  * from researcher where supervisor_id=@id", demo.conn);
+                cmd.Parameters.AddWithValue("@id", Stf.ID.ToString());
+                // 2. Call Execute reader to get query results
+                rdr = cmd.ExecuteReader();
+
+                while (rdr.Read())
+                {
+                    var id = rdr.GetInt32("id");
+                    var type = rdr.GetString("type");
+                    var firstName = rdr.GetString("given_name");
+                    var lastName = rdr.GetString("family_name");
+                    var title = rdr.GetString("title");
+                    var unit = rdr.GetString("unit");
+                    var campus = rdr.GetString("campus");
+                    var email = rdr.GetString("email");
+                    var photo = rdr.GetString("photo");
+                    var utas_start = rdr.GetDateTime("utas_start");
+                    var cur_start = rdr.GetDateTime("current_start");
+
+                    Researcher res = new Researcher(id, type, firstName, lastName, title, unit, campus, email, photo, utas_start, cur_start);
+                    Stf.Supervisions.Add(res);
+                }
+            }
+            finally
+            {
+                // close the reader
+                if (rdr != null)
+                {
+                    rdr.Close();
+                }
+
+                // Close the connection
+                if (demo.conn != null)
+                {
+                    demo.conn.Close();
+                }
+            }
+        }
+
 
         public static List<Researcher> GetResearcher()
         {
@@ -171,10 +226,31 @@ namespace KIT206_RAP.DataBase
                     var photo = rdr.GetString("photo");
                     var utas_start = rdr.GetDateTime("utas_start");
                     var cur_start = rdr.GetDateTime("current_start");
+                    if (type.Equals("Student"))
+                    {
+                        var degree = rdr.GetString("degree");
+                        var superID = rdr.GetInt32("supervisor_id");
 
-                    Researcher res = new Researcher(id, type, firstName, lastName, title, unit, campus, email, photo, utas_start, cur_start);
-                    Console.WriteLine("researcher added = " + res.LastName);
-                    Researchers.Add(res);
+
+                        Student Stu = new Student(id, type, firstName, lastName, title, unit, campus, email, photo, superID, degree, utas_start, cur_start);
+                        GetPubs(Stu);
+                        Researchers.Add(Stu);
+                    }
+                    else
+                    {
+                        var lev = rdr.GetString("level");
+
+                        Staff sta = new Staff(id, type, firstName, lastName, title, unit, campus, email, photo, lev, utas_start, cur_start);
+                        GetPubs(sta);
+                        Researchers.Add(sta);
+                        // this could be replaced with nested for loops to check the list for supervisors == id
+                        // probs faster to query DB?
+                        GetSupervisions(sta);
+                    }
+
+                    //Researcher res = new Researcher(id, type, firstName, lastName, title, unit, campus, email, photo, utas_start, cur_start);
+                    //Console.WriteLine("researcher added = " + res.LastName);
+                    //Researchers.Add(res);
                 }
             }
             finally
@@ -230,7 +306,6 @@ namespace KIT206_RAP.DataBase
                         var lev = rdr.GetString("level");
                         var utas_start = rdr.GetDateTime("utas_start");
                         var cur_start = rdr.GetDateTime("current_start");
-
                         Staff sta = new Staff(id, type, firstName, lastName, title, unit, campus, email, photo, lev, utas_start, cur_start);
                         Staff.Add(sta);
                     }
@@ -403,6 +478,65 @@ namespace KIT206_RAP.DataBase
             return null;
         }
 
+        // get positions only staff have positions
+        // parameters a staff, so as we can add the positions to their List<positions>
+        
+        public static void GetPositions(Staff Sta)
+        {
+            // get * from positions where if = Sta.id
+            // get the vars,
+            // handle nulls for stil active position
+            // add to the list
+
+            MySqlDataReader rdr = null;
+            DBAdapter demo = new DBAdapter();
+            // get list of DOI strings which match resercher_id
+
+                try
+                {
+                    // Open the connection
+                    demo.conn.Open();
+
+                    // 1. Instantiate a new command with a query and connection
+                    MySqlCommand cmd = new MySqlCommand("select * from position where id = @id", demo.conn);
+                    cmd.Parameters.AddWithValue("@id", Sta.ID);
+                    rdr = cmd.ExecuteReader();
+                    while (rdr.Read()) 
+                    {
+                        var level = rdr.GetString("level");
+                        var start = rdr.GetDateTime("start"); // thisis just a string of authors, not researcchers
+                        DateTime? end = null;
+                            
+                        if (!rdr.IsDBNull(rdr.GetOrdinal("end"))) // check if value is not null
+                        {
+                            end = rdr.GetDateTime("end"); // assign value to end variable
+                    }
+                    else
+                    {
+                        end = null;
+                    }
+
+                    Position pos = new Position(start, end, level);
+                        Sta.Positions.Add(pos);
+                    }
+                }
+                finally
+                {
+                    // close the reader
+                    if (rdr != null)
+                    {
+                        rdr.Close();
+                    }
+
+                    // Close the connection
+                    if (demo.conn != null)
+                    {
+                        demo.conn.Close();
+                    }
+                }
+            Console.WriteLine("PAUSE;");
+        }
+
         
         /*
          * Using the ExecuteReader method to select from a single table */
@@ -461,25 +595,6 @@ namespace KIT206_RAP.DataBase
             }
             return count;
         }
-        
-        public static List<Publication> GeneratePublications(String name)
-        {
-            return new List<Publication>()
-            {
-            
-            };
-        }
-
-        public static List<Position> GeneratePositions()
-        {
-            return new List<Position>()
-            {
-                new Position {StartDate = new DateTime(1986,1,1), Level = Level.A, EndDate = new DateTime(1987,2,2)},
-                new Position {StartDate = new DateTime(1988,1,1), Level = Level.A, EndDate = new DateTime(1999,2,2)},
-                new Position {StartDate = new DateTime(2001,1,1), Level = Level.A, EndDate = new DateTime(2002,2,2)},
-                new Position {StartDate = new DateTime(2020,1,1), Level = Level.A, EndDate = new DateTime()},
-            };
-        }
-
+       
     }
 }

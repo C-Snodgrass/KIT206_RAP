@@ -10,10 +10,10 @@ namespace KIT206_RAP.View
     internal class PublicationView
     {
 
-        public static void PrintAllPublication(List<Publication> publication_list)
+        public static void PrintAllPublication(Researcher Res)
         {
             Console.WriteLine("---\t---\t---\t We are in the Publicaion View \t---\t---\t---");
-            foreach (Publication publication in publication_list)
+            foreach (Publication publication in Res.Pubs)
             {
                  // could send this to an overloaded print fuction in the publication class if we wanted.
                 Console.WriteLine("Publicaiton Name: " + publication.Title);

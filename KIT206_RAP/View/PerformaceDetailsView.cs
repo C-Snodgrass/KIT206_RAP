@@ -32,17 +32,22 @@ namespace KIT206_RAP.View
         value (rounded to the floor in case of a decimal); performance by funding, which is expressed as an average per year with one
         decimal place shown. 
          */
-        public static void PrintPerformanceView(Researcher researcher)
+        public static void PrintPerformanceView(Researcher Res)
         {
-            //List<Publication> publications = ResearcherControl.GetPublications(researcher);
             //Researcher.Q1PercentageCalc(researcher, publications);
 
-               
-
             Console.WriteLine("\t#####\t#####\t WELCOME TO PERFORMANCE WIEW \t########\t#######");
-            Console.WriteLine("Performance for :" + researcher.LastName);
-            Console.WriteLine("Q1 performance is ..." + researcher.Q1Percentage + "%");
+            Console.WriteLine("Performance for :" + Res.LastName);
+            Console.WriteLine("Q1 performance is ... un-available at the moment" + "%");
+            // Q1 unabaliable, no Q ratings in DB
+            // Performance by Funding Received unavailable, as no funding in DB
+            // these should probably be called by the controller then stored in attributes fo rthe staff
+            Console.WriteLine("The three year average is... " + Researcher.AveragePublicationsPerYear(Res));
+            Console.WriteLine("The performance by Publication is " + Researcher.CalculatePerformanceByPublication(Res));
 
+            // have not implimented supervisions yet... will need new DB query
+
+            Console.WriteLine("Pause");
         }
     }
 }

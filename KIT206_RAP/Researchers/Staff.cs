@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static KIT206_RAP.Researchers.Staff;
 /*
 3-year Average is the total number of publications in the previous three whole calendar years, divided by three. SWC 27
 Performance by Publication is the average number of publications per year since commencement. SWC 27
@@ -14,68 +15,71 @@ namespace KIT206_RAP.Researchers
 {
     internal class Staff : Researcher
     {
+        
+        public double ExpectedNoPubs { get; set; }
+        public JobTitle Title { get; set; }
         public double FundingRecieved { get; set; }
         public double PerformanceByFunding { get; set; }
         public int ThreeYearAverage { get; set; }
         public int PerformanceByPublication { get; set; }
+        public List<Position> Positions { get; set; }
+        // not sure how to handle supervisions, just the researcher id or a name?
+        public int SuperCount { get; set; }
+        public List<Researcher> Supervisions { get; set; }
+        // want to make this an enum
+        public string level { get; set; }
+
             
        // Constructor
         public Staff(int id, string type, string firstName, string lastName, string title, string schoolUnit, string campHouse, string email, string photURL, string lev, DateTime utas_start, DateTime curretn_start)
             : base( id, type, firstName, lastName, title, schoolUnit, campHouse, email, photURL, utas_start, curretn_start)
         {
-            // i think this is wrong as we are passing in a list of studenst and positions but then making a new list here??
             // will have to ping the database with something like get all students with "researcher name" as supervisor
+            // this currently happens in the 
+            level = lev;
+            Positions = new List<Position>();
+            Supervisions = new List<Researcher>();
             //ThreeYearAverage = AverageThreeYear();
             //double funding = 100;
 
         }
-        public Level CalcPosLevel(string lev)
-        {
-            if (lev.Equals("A"))
-            {
-                return Level.A;
-            }else if (lev.Equals("B"))
-            {
-                return Level.B;
-            }else if (lev.Equals("C"))
-            {
-                return Level.C;
-            }
-            return Level.D;
-        }
 
         public void DeriveJobTitle(Level level)
         {
-
             switch (level)
             {
                 case Level.A:
-                    JobTitle = "Research Associate";
-                    ExpectedNoPublications = 0.5; 
-                    break; 
+                    Title = JobTitle.ResearchAssociate;
+                    ExpectedNoPubs = 0.5;
+                    break;
                 case Level.B:
-                    JobTitle = "Lecturer";
-                    ExpectedNoPublications = 1;
+                    Title = JobTitle.Lecturer;
+                    ExpectedNoPubs = 1;
                     break;
 
                 case Level.C:
-                    JobTitle = "Assistant Professor";
-                    ExpectedNoPublications = 2;
+                    Title = JobTitle.AssistantProfessor;
+                    ExpectedNoPubs = 2;
                     break;
 
                 case Level.D:
-                    JobTitle = "Associate Professor";
-                    ExpectedNoPublications = 3.2;
+                    Title = JobTitle.AssociateProfessor;
+                    ExpectedNoPubs = 3.2;
                     break;
 
                 case Level.E:
-                    JobTitle = "Professor";
-                    ExpectedNoPublications = 4;
+                    Title = JobTitle.Professor;
+                    ExpectedNoPubs = 4;
                     break;
 
                 default:
                     throw new ArgumentException("Invalid level character");
             }
+        }
+
+        public static void CalcStafPerformance(Staff Sta)
+        {
+
         }
         
        /* 
@@ -128,26 +132,45 @@ namespace KIT206_RAP.Researchers
         // calculate performance
         // calculate perfomeance by publication
 
-  /*
-        public static void Q1PercentageCalc(Researcher researcher, List<Publication> publications)
+        /*
+              public static void Q1PercentageCalc(Researcher researcher, List<Publication> publications)
+              {
+                  int q1Count = 0;
+                  int totalPublications = publications.Count;
+
+                  foreach (Publication publication in publications)
+                  {
+                      if (publication.Ranking == RankingType.Q1)
+                      {
+                          q1Count++;
+                      }
+                  }
+
+                  double percentage = (double)q1Count / totalPublications * 100;
+                  // sets the top global var...
+                  researcher.Q1Percentage = percentage;
+                  Console.WriteLine(researcher.Q1Percentage);
+                  Console.WriteLine(researcher.Q1Percentage);
+                  Console.WriteLine(researcher.Q1Percentage);
+              }
+              */
+        public enum JobTitle
         {
-            int q1Count = 0;
-            int totalPublications = publications.Count;
-
-            foreach (Publication publication in publications)
-            {
-                if (publication.Ranking == RankingType.Q1)
-                {
-                    q1Count++;
-                }
-            }
-
-            double percentage = (double)q1Count / totalPublications * 100;
-            // sets the top global var...
-            researcher.Q1Percentage = percentage;
-            Console.WriteLine(researcher.Q1Percentage);
-            Console.WriteLine(researcher.Q1Percentage);
-            Console.WriteLine(researcher.Q1Percentage);
+            ResearchAssociate,
+            Lecturer,
+            AssistantProfessor,
+            AssociateProfessor,
+            Professor
+        }
+        /*
+         * struggling to get below enum working
+        public enum ExpectedPublications : double
+        {
+            LevelA = 0.5,
+            LevelB = 1,
+            LevelC = 2,
+            LevelD = 3.2,
+            LevelE = 4
         }
         */
 

@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using System.Xml.Schema;
 
 namespace KIT206_RAP.Researchers
 
@@ -24,7 +25,6 @@ namespace KIT206_RAP.Researchers
         public string FirstName { get; set; }
         public bool IsStudent { get; set; }
         public string LastName { get; set; }
-        public string Title { get; set; }
         public string SchoolUnit { get; set; }
         public string Email { get; set; }
         public string photoURL{ get; set; }
@@ -33,9 +33,11 @@ namespace KIT206_RAP.Researchers
         public DateTime CommenceCurrentPosition { get; private set; }
         public DateTime CommencedWithInstitution { get; private set; }
         public double Q1Percentage { get; private set; }
-        public string JobTitle { get; set; }
-        public double ExpectedNoPublications { get; set; }
+        //public string JobTitle { get; set; }
+        //public double ExpectedNoPublications { get; set; }
         public Campus Camp { get; set; }
+
+        public List<Publication> Pubs{ get; set; }
         public double Tenure { get; private set; } // time in fractional years since the researcher commecned with the institution
         //public Level positionLevle { get; set; }
 
@@ -50,16 +52,19 @@ namespace KIT206_RAP.Researchers
             SchoolUnit = schoolUnit;
             Email = email;
             photoURL = photURL;
-            
-            //positionLevle = CalcPosLevel(lev);
+            Pubs = new List<Publication>();
             Camp = CampCalc(campHouse);
-            //photoPlaceHolder = FetchPhoto();
-            Title = title;
-            //DeriveJobTitle(positionLevle);
             this.photoURL = photoURL;
             CommencedWithInstitution = utas_start;
             CommenceCurrentPosition = curretn_start;
-        }
+            // could call the GetPubs here in the constructor if we wanted, get the pubs when we
+            // create the researcher if we want...
+
+            //photoPlaceHolder = FetchPhoto();
+            //positionLevle = CalcPosLevel(lev);
+            //Title = title;
+            //DeriveJobTitle(positionLevle);
+            }
         
         public Campus CampCalc(string strCamp)
         {
@@ -92,7 +97,7 @@ namespace KIT206_RAP.Researchers
             }
             CalcEarliestPos(researcher, positions);
             CalcTenure(researcher, researcher.CommencedWithInstitution);
-            CalcComencedCurrentPos(researcher, positions);
+            //CalcComencedCurrentPos(researcher, positions);
 
         }
         public static void CalcEarliestPos(Researcher researcher, List<Position> positions)
@@ -125,26 +130,64 @@ namespace KIT206_RAP.Researchers
             researcher.Tenure = years;
         }
 
-        // want  this to return a Position void is placeholder
-        public static void CalcComencedCurrentPos(Researcher researcher, List<Position> positions)
+        // this will just have to take the staff member (as stu do not have positions) and loop through looking for the pos. with end date == null
+        // // then get that pos start date
+        public static DateTime CalcComencedCurrentPos(Staff Sta)
         {
-            // search the positions table for latest start dat (max)
-            // SELECT MAX(start_date) as earliest_start_date
-            // FROM positions;
-            // or
-            // or are we looking for a position with a NULL end date, i.e. no end date???
-            // find highest date in the list, this will be the current position
-            DateTime highest = new DateTime(1, 1, 1);
-            foreach( Position position in positions)
+            // presume i don't have to handle null pointer / empty list
+            // as each staff will have a current position and entry in DB
+            foreach (Position pos in Sta.Positions)
             {
-                if (position.StartDate > highest)
+                if (pos.EndDate == null)
                 {
-                    highest= position.StartDate;
+                    // or return the pos, or whatever we want
+                    return pos.StartDate;
                 }
             }
-            researcher.CommenceCurrentPosition = highest;
+            return new DateTime(1,1,1);
         }
+        // this funciton assumes all publication were written in the time the researcher has been with this institution
+        // assid form that i think it is correct
+        public static double CalculatePerformanceByPublication(Researcher researcher)
+        {
+            // Calculate the number of years since commencement
+            int yearsSinceCommencement = DateTime.Now.Year - researcher.CommencedWithInstitution.Year;
+            Console.WriteLine("now is ... " + DateTime.Now.Year + "research commecned with insti year " + researcher.CommencedWithInstitution.Year);
+      
+            Console.WriteLine("yearsSonceComm = " + yearsSinceCommencement);
 
+            // Calculate the total number of publications
+            // assumes that all these publications are for this institution
+            int totalPublications = researcher.Pubs.Count;
+            Console.WriteLine("total Pubs " + researcher.Pubs.Count);
+            // Calculate the performance by publication needs to be round to floor
+            double performanceByPublication = (double)totalPublications / yearsSinceCommencement;
+            double perfByPub = Math.Floor(performanceByPublication);    // cast to int?
+            
+            return perfByPub;
+        }
+        public static double AveragePublicationsPerYear(Researcher Res)
+        {
+            // Get the current date
+            DateTime currentDate = DateTime.Today;
+
+            // Filter the publications to only include those from the last three years
+            List<Publication> recentPublications = Res.Pubs
+                .Where(p => p.AvailabilityDate.Year >= currentDate.Year - 2)
+                .ToList();
+
+            // Calculate the total number of publications
+            int totalPublications = recentPublications.Count();
+
+            // Calculate the number of years represented in the recent publications
+            //int years = currentDate.Year - recentPublications.Last().AvailabilityDate.Year + 1;
+            int years = 3;
+            // Calculate the average number of publications per year
+            double averagePublicationsPerYear = (double)totalPublications / years;
+            Console.WriteLine(averagePublicationsPerYear);
+
+            return averagePublicationsPerYear;
+        }
         public String FetchPhoto()
         {
             // fetch photo url

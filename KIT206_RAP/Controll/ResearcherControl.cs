@@ -11,6 +11,7 @@ namespace KIT206_RAP.Controll
 {
     internal class ResearcherControl
     {
+        // UC8
         public static void DisplayResearchers()
         {
             // old version passed list objects for student and staff
@@ -22,44 +23,29 @@ namespace KIT206_RAP.Controll
             //ResearcherView.PrintAllResearchers(StuList, StaList);
         }
 
+        // need positions, not pubs here...
+        // positions only for staff, so two researcher details 
+        // UC16
         public static void DisplayResearcherDetails(Researcher Res)
         {
-            //fetch publications
-            List<Publication> PubList = DBAdapter.GetPubs(Res);
+            //get the positions here
 
-            Console.WriteLine(Res.Type);
-            PublicationView.PrintAllPublication(PubList);
-
-
-            Console.WriteLine(Res.Type);
-
-            // is my logic the right way arround on this?? pretty important one...
-            if (Res.Type == Researcher.ResearcherType.Student)
+            if (Res is Staff staff)
             {
-                Console.WriteLine("is a student");
-                // call the DB to get the additional info
-                Student Sta = DBAdapter.GetStudent(Res.ID);
-                // create the staff with all the additional stuff they need
-                // probably need to pass the publicaitons lit
-                //ResearcherDetailsView.DisplayResearcherDetailsViewStaff(staffMember);
-
+                DBAdapter.GetPositions(staff);
             }
-            else
-            {
-                Console.WriteLine("is a staff");
-                // create student 
-                Staff sta = DBAdapter.GetStaff(Res.ID);
-                // call the DB to get the additiaonl info.
-
-                // probably need to pass the publications list
-                //ResearcherDetailsView.DisplayResearcherDetailsViewStudent(student);
-            }
-
+            ResearcherDetailsView.DisplayResearcherDetails(Res);
         }
 
-        public static void DisplayPerformanceDetails(Researcher researcehr)
+        public static void DisplayPerformanceDetails(Researcher Res)
         {
-            PerformaceDetailsView.PrintPerformanceView(researcehr);
+            // performance details view
+             DBAdapter.GetPubs(Res);
+            // Console.WriteLine(Res.Type);
+            // PublicationView.PrintAllPublication(Res);
+            //Console.WriteLine(Res.Type);
+
+            PerformaceDetailsView.PrintPerformanceView(Res);
         }
 
 

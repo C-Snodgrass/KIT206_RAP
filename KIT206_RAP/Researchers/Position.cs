@@ -19,16 +19,29 @@ namespace KIT206_RAP.Researchers
     internal class Position
     {
         public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public DateTime? EndDate { get; set; }
         public Level Level{ get; set; }
         
-        /*
-        public Position(DateTime startDate, DateTime endDate, Level level)
+        
+        public Position(DateTime startDate, DateTime? endDate, string level)
         {
             StartDate = startDate;
             EndDate = endDate;
-            Level = level;
+            Level = CalcPosLevel(level);
         }
-        */
+         public Level CalcPosLevel(string lev)
+        {
+            if (lev.Equals("A"))
+            {
+                return Level.A;
+            }else if (lev.Equals("B"))
+            {
+                return Level.B;
+            }else if (lev.Equals("C"))
+            {
+                return Level.C;
+            }
+            return Level.D;
+        }      
     }
 }
